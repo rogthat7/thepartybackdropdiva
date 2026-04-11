@@ -1,0 +1,9 @@
+# Ignore bin and obj folders for all projects
+[Bb]in/
+[Oo]bj/
+[Bb]in\
+[Oo]bj\
+
+# Ignore Visual Studio and environments
+.vs/
+.env
