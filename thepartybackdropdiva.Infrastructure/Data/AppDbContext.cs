@@ -1,11 +1,13 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using thepartybackdropdiva.Domain.Entities;
 
 namespace thepartybackdropdiva.Infrastructure.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
-    protected AppDbContext(DbContextOptions options) : base(options)
+    public AppDbContext(DbContextOptions options) : base(options)
     {
     }
 
@@ -21,6 +23,7 @@ public class AppDbContext : DbContext
     public DbSet<Booking> Bookings { get; set; } = null!;
     public DbSet<Invoice> Invoices { get; set; } = null!;
     public DbSet<Payment> Payments { get; set; } = null!;
+    public DbSet<ConsultationRequest> ConsultationRequests { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

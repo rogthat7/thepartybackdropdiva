@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 COPY ["thepartybackdropdiva.Api/thepartybackdropdiva.Api.csproj", "thepartybackdropdiva.Api/"]
 COPY ["thepartybackdropdiva.Application/thepartybackdropdiva.Application.csproj", "thepartybackdropdiva.Application/"]
@@ -16,5 +16,6 @@ RUN dotnet publish "thepartybackdropdiva.Api.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
+RUN apt-get update && apt-get install -y libgssapi-krb5-2 && rm -rf /var/lib/apt/lists/*
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "thepartybackdropdiva.Api.dll"]

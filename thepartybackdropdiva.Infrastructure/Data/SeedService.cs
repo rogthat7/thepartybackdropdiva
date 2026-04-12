@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using thepartybackdropdiva.Domain.Entities;
@@ -9,8 +10,40 @@ public static class SeedService
     public static async Task InitializeAsync(IServiceProvider serviceProvider)
     {
         var context = serviceProvider.GetRequiredService<AppDbContext>();
+        var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
         await context.Database.MigrateAsync();
+
+        // Seed Roles
+        string[] roleNames = { "Admin", "Member", "Guest" };
+        foreach (var roleName in roleNames)
+        {
+            if (!await roleManager.RoleExistsAsync(roleName))
+            {
+                await roleManager.CreateAsync(new IdentityRole<Guid>(roleName));
+            }
+        }
+
+        // Seed Admin User
+        var adminEmail = "admin@thepartybackdropdiva.com";
+        if (await userManager.FindByEmailAsync(adminEmail) == null)
+        {
+            var adminUser = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                FirstName = "Admin",
+                LastName = "User",
+                EmailConfirmed = true
+            };
+
+            var result = await userManager.CreateAsync(adminUser, "Admin@123!");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
+        }
 
         if (!await context.CateringMenus.AnyAsync())
         {

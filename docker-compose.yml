@@ -1,4 +1,4 @@
-﻿services:
+services:
   db:
     image: postgres:15
     environment:
@@ -22,11 +22,14 @@
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Database=thepartybackdropdiva;Username=postgres;Password=YourStrongPassword123!
       - ASPNETCORE_ENVIRONMENT=Development
+      - EmailSettings__SmtpServer=mailpit
     ports:
       - "5000:8080"
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_started
 
   ui:
     build:
@@ -36,6 +39,12 @@
       - "3000:80"
     depends_on:
       - api
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
 volumes:
   postgres_data:

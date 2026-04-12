@@ -24,6 +24,7 @@ public class NotificationsController : ControllerBase
     [HttpPost("consultation")]
     public async Task<IActionResult> RequestConsultation([FromBody] ConsultationRequestDto request)
     {
+
         if (string.IsNullOrWhiteSpace(request.Email) && string.IsNullOrWhiteSpace(request.Phone))
         {
             return BadRequest("Must provide at least an email or phone number.");
