@@ -3,9 +3,11 @@
   <ItemGroup>
     <ProjectReference Include="..\thepartybackdropdiva.Domain\thepartybackdropdiva.Domain.csproj" />
     <ProjectReference Include="..\thepartybackdropdiva.Contracts\thepartybackdropdiva.Contracts.csproj" />
+    <ProjectReference Include="..\thepartybackdropdiva.Infrastructure\thepartybackdropdiva.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.1.1" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.24.4" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
   </ItemGroup>
