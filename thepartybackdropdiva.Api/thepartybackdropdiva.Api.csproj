@@ -20,6 +20,7 @@
     <ProjectReference Include="..\thepartybackdropdiva.Infrastructure\thepartybackdropdiva.Infrastructure.csproj" />
     <ProjectReference Include="..\thepartybackdropdiva.Contracts\thepartybackdropdiva.Contracts.csproj" />
     <ProjectReference Include="..\thepartybackdropdiva.Ai\thepartybackdropdiva.Ai.csproj" />
+    <ProjectReference Include="..\thepartybackdropdiva.Communication\thepartybackdropdiva.Communication.csproj" />
   </ItemGroup>
 
 </Project>

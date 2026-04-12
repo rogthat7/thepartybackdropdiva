@@ -3,9 +3,12 @@ import { useState } from 'react';
 import { BackdropGallery } from './components/BackdropGallery';
 import { CateringMenuSelector } from './components/CateringMenuSelector';
 import { FireworksBackground } from './components/FireworksBackground';
+import { ConsultationModal } from './components/ConsultationModal';
 
 function App() {
   const [isDark, setIsDark] = useState(true);
+  const [activeTab, setActiveTab] = useState<'gallery' | 'catering'>('gallery');
+  const [isConsultationModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className={`relative min-h-screen font-sans transition-colors duration-500 ${isDark ? 'bg-gray-900 text-gray-100 dark' : 'bg-[#fcfcfc] text-gray-900'}`}>
@@ -24,9 +27,9 @@ function App() {
             <h1 className="text-2xl font-light tracking-widest uppercase">The Party Backdrop <span className="font-semibold text-gold-500">Diva</span></h1>
           </div>
           <nav className="space-x-8 text-sm font-medium tracking-wide">
-            <a href="#" className="hover:text-gold-500 transition">Gallery</a>
-            <a href="#" className="hover:text-gold-500 transition">Catering</a>
-            <a href="#" className="hover:text-gold-500 transition">Inquire</a>
+            <button onClick={() => setActiveTab('gallery')} className={`transition ${activeTab === 'gallery' ? 'text-gold-500' : 'hover:text-gold-500'}`}>Gallery</button>
+            <button onClick={() => setActiveTab('catering')} className={`transition ${activeTab === 'catering' ? 'text-gold-500' : 'hover:text-gold-500'}`}>Catering</button>
+            <button className="hover:text-gold-500 transition">Inquire</button>
           </nav>
         </div>
       </header>
@@ -35,21 +38,30 @@ function App() {
       <section className="relative z-10 py-24 text-center px-4">
         <h2 className="text-5xl md:text-6xl font-light mb-6">Elevate Your Next Event</h2>
         <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-10">Luxury backdrops and premium catering services designed to create unforgettable experiences.</p>
-        <button className="bg-gold-500 hover:bg-gold-600 text-white px-8 py-4 rounded-full font-medium tracking-wide transition shadow-lg hover:shadow-xl">
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="bg-gold-500 hover:bg-gold-600 text-white px-8 py-4 rounded-full font-medium tracking-wide transition shadow-lg hover:shadow-xl"
+        >
           Book a Consultation
         </button>
       </section>
 
       {/* Main Content Areas */}
       <main className="relative z-10">
-        <BackdropGallery />
-        <CateringMenuSelector />
+        {activeTab === 'gallery' && <BackdropGallery />}
+        {activeTab === 'catering' && <CateringMenuSelector />}
       </main>
       
       {/* Footer */}
       <footer className={`relative z-10 py-12 text-center text-sm transition-colors ${isDark ? 'bg-black text-gray-500' : 'bg-gray-900 text-gray-400'}`}>
         <p>&copy; {new Date().getFullYear()} The Party Backdrop Diva. All rights reserved.</p>
       </footer>
+
+      <ConsultationModal 
+        isOpen={isConsultationModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        isDark={isDark} 
+      />
     </div>
   );
 }

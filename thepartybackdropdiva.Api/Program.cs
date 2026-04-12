@@ -35,6 +35,7 @@ builder.Services.AddAutoMapper(config => { config.AddProfile<MappingProfile>(); 
 builder.Services.AddTransient<IPricingEngine, PricingEngine>();
 builder.Services.AddScoped<ICateringService, CateringService>();
 builder.Services.AddScoped<IBackdropService, BackdropService>();
+builder.Services.AddScoped<thepartybackdropdiva.Communication.Interfaces.ICommunicationService, thepartybackdropdiva.Communication.Services.CommunicationService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

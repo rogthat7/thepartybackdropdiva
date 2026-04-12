@@ -3,6 +3,7 @@
   <Project Path="thepartybackdropdiva.Api/thepartybackdropdiva.Api.csproj" />
   <Project Path="thepartybackdropdiva.Application/thepartybackdropdiva.Application.csproj" />
   <Project Path="thepartybackdropdiva.Contracts/thepartybackdropdiva.Contracts.csproj" />
+  <Project Path="thepartybackdropdiva.Communication/thepartybackdropdiva.Communication.csproj" />
   <Project Path="thepartybackdropdiva.Domain/thepartybackdropdiva.Domain.csproj" />
   <Project Path="thepartybackdropdiva.Infrastructure/thepartybackdropdiva.Infrastructure.csproj" />
 </Solution>
