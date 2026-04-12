@@ -3,7 +3,7 @@ export interface ConsultationRequest {
   phone?: string;
 }
 
-const API_BASE_URL = 'http://localhost:5148';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5148';
 
 export const submitConsultation = async (request: ConsultationRequest): Promise<void> => {
   const { email, phone } = request;
