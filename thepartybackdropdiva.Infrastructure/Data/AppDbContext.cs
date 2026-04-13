@@ -24,6 +24,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<Invoice> Invoices { get; set; } = null!;
     public DbSet<Payment> Payments { get; set; } = null!;
     public DbSet<ConsultationRequest> ConsultationRequests { get; set; } = null!;
+    public DbSet<FollowUp> FollowUps { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -42,6 +43,13 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
             .HasOne(b => b.Invoice)
             .WithOne(i => i.Booking)
             .HasForeignKey<Invoice>(i => i.BookingId);
+
+        // Booking to FollowUps is 1-to-many
+        modelBuilder.Entity<FollowUp>()
+            .HasOne(f => f.Booking)
+            .WithMany(b => b.FollowUps)
+            .HasForeignKey(f => f.BookingId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Configure precision for decimals
         var decimals = modelBuilder.Model.GetEntityTypes()

@@ -34,6 +34,9 @@ export const Home: React.FC = () => {
             {isAdmin && (
               <Link to="/admin" className="text-gold-500 hover:text-gold-600 transition font-bold">Admin</Link>
             )}
+            {isAuthenticated && !isAdmin && (
+              <Link to="/my-events" className="text-gold-500 hover:text-gold-600 transition">My Events</Link>
+            )}
             
             {isAuthenticated ? (
               <div className="flex items-center gap-4 border-l border-gray-800 pl-8 ml-4">

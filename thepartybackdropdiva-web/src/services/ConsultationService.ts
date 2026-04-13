@@ -49,3 +49,16 @@ export const deleteConsultationRequest = async (id: string): Promise<void> => {
     throw new Error('Failed to delete consultation request');
   }
 };
+
+export const getAllBookings = async (): Promise<any[]> => {
+  const token = localStorage.getItem('auth_token');
+  const response = await fetch(`${API_BASE_URL}/api/admin/bookings`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  if (!response.ok) {
+    throw new Error('Failed to fetch bookings');
+  }
+  return response.json();
+};

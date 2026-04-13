@@ -9,8 +9,17 @@ using thepartybackdropdiva.Application.Services;
 using thepartybackdropdiva.Domain.Entities;
 using thepartybackdropdiva.Infrastructure.Data;
 using thepartybackdropdiva.Infrastructure.Repositories;
+using Scalar.AspNetCore;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// MediatR
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(thepartybackdropdiva.Application.Bookings.Queries.GetMemberEventsQuery).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
 
 // Add services to the container.
 builder.Services.Configure<thepartybackdropdiva.Communication.Models.EmailSettings>(
@@ -92,7 +101,12 @@ builder.Services.AddScoped<thepartybackdropdiva.Communication.Interfaces.ICommun
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// .NET 10 Native OpenAPI
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<thepartybackdropdiva.Api.Infrastructure.BearerSecuritySchemeTransformer>();
+});
 
 // CORS
 builder.Services.AddCors(options =>
@@ -113,8 +127,11 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+    
+    // Redirect /swagger to /scalar/v1 to avoid 404 confusion
+    app.MapGet("/swagger", () => Results.Redirect("/scalar/v1"));
 }
 
 app.UseHttpsRedirection();
@@ -123,4 +140,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-app.Run();
+try
+{
+    app.Run();
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine("FATAL ERROR DURING STARTUP:");
+    Console.Error.WriteLine(ex.ToString());
+    throw;
+}

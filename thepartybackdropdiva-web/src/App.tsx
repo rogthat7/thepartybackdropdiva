@@ -3,6 +3,7 @@ import { Home } from './components/Home';
 import { AdminLeads } from './components/AdminLeads';
 import { Login } from './components/Login';
 import { Register } from './components/Register';
+import { YourEvents } from './components/YourEvents';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
@@ -15,6 +16,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           
+          <Route element={<ProtectedRoute />}>
+             <Route path="/my-events" element={<YourEvents />} />
+          </Route>
+
           <Route element={<ProtectedRoute allowedRoles={['Admin']} />}>
             <Route path="/admin" element={<AdminLeads />} />
           </Route>

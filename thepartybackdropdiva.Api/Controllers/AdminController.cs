@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
 using thepartybackdropdiva.Application.Interfaces;
 using thepartybackdropdiva.Domain.Entities;
 using thepartybackdropdiva.Infrastructure.Repositories;
@@ -13,13 +14,16 @@ public class AdminController : ControllerBase
 {
     private readonly IRepository<Booking> _bookingRepository;
     private readonly IRepository<ConsultationRequest> _consultationRepository;
+    private readonly IMediator _mediator;
 
     public AdminController(
         IRepository<Booking> bookingRepository, 
-        IRepository<ConsultationRequest> consultationRepository)
+        IRepository<ConsultationRequest> consultationRepository,
+        IMediator mediator)
     {
         _bookingRepository = bookingRepository;
         _consultationRepository = consultationRepository;
+        _mediator = mediator;
     }
 
     [HttpGet("bookings")]
@@ -57,6 +61,21 @@ public class AdminController : ControllerBase
         await _consultationRepository.DeleteAsync(request);
         return NoContent();
     }
+
+    [HttpPost("bookings/{id}/followup")]
+    public async Task<IActionResult> AddFollowUp(Guid id, [FromBody] AddFollowUpRequest request)
+    {
+        var command = new thepartybackdropdiva.Application.Bookings.Commands.AddFollowUpCommand(id, request.Note, User.Identity?.Name ?? "Admin");
+        var result = await _mediator.Send(command);
+        
+        if (!result) return NotFound();
+        return Ok();
+    }
+}
+
+public class AddFollowUpRequest
+{
+    public string Note { get; set; } = string.Empty;
 }
 
 public class UpdateStatusDto

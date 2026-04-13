@@ -47,3 +47,45 @@ export const fetchMenus = async () => {
     const res = await apiClient.get<CateringMenuDto[]>('/Catalog/menus');
     return res.data;
 };
+
+// Member Endpoints
+export interface FollowUpDto {
+    id: string;
+    note: string;
+    adminName: string;
+    createdAt: string;
+}
+
+export interface BookingDto {
+    id: string;
+    customerName: string;
+    status: string;
+    eventDate: string;
+    eventLocation: string;
+    followUps: FollowUpDto[];
+}
+
+export const fetchMyEvents = async () => {
+    const token = localStorage.getItem('auth_token');
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/member/my-events`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (!res.ok) throw new Error('Failed to fetch events');
+    return res.json() as Promise<BookingDto[]>;
+};
+
+// Admin Endpoints
+export const addBookingFollowUp = async (bookingId: string, note: string) => {
+    const token = localStorage.getItem('auth_token');
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/bookings/${bookingId}/followup`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ note })
+    });
+    if (!res.ok) throw new Error('Failed to add follow-up');
+};

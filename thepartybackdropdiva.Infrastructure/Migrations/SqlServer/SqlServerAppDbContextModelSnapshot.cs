@@ -17,7 +17,7 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.5")
+                .HasAnnotation("ProductVersion", "10.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -281,6 +281,9 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.ToTable("Bookings");
@@ -343,6 +346,36 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
                     b.HasKey("Id");
 
                     b.ToTable("ConsultationRequests");
+                });
+
+            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.FollowUp", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdminName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.ToTable("FollowUps");
                 });
 
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Invoice", b =>
@@ -610,6 +643,17 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.FollowUp", b =>
+                {
+                    b.HasOne("thepartybackdropdiva.Domain.Entities.Booking", "Booking")
+                        .WithMany("FollowUps")
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+                });
+
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Invoice", b =>
                 {
                     b.HasOne("thepartybackdropdiva.Domain.Entities.Booking", "Booking")
@@ -652,6 +696,8 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
 
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Booking", b =>
                 {
+                    b.Navigation("FollowUps");
+
                     b.Navigation("Invoice");
                 });
 
