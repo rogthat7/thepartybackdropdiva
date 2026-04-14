@@ -90,6 +90,8 @@ else
 }
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IConsultationRequestRepository, ConsultationRequestRepository>();
+builder.Services.AddScoped<ISupportRequestRepository, SupportRequestRepository>();
 
 // Application
 builder.Services.AddAutoMapper(config => { config.AddProfile<MappingProfile>(); });

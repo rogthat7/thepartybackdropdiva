@@ -25,6 +25,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<Payment> Payments { get; set; } = null!;
     public DbSet<ConsultationRequest> ConsultationRequests { get; set; } = null!;
     public DbSet<FollowUp> FollowUps { get; set; } = null!;
+    public DbSet<SupportRequest> SupportRequests { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

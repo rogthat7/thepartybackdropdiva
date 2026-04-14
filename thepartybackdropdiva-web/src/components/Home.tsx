@@ -4,13 +4,14 @@ import { BackdropGallery } from './BackdropGallery';
 import { CateringMenuSelector } from './CateringMenuSelector';
 import { FireworksBackground } from './FireworksBackground';
 import { ConsultationModal } from './ConsultationModal';
+import { SupportRequests } from './SupportRequests';
 import { useAuth } from '../context/AuthContext';
 
 export const Home: React.FC = () => {
   const [isDark, setIsDark] = useState(true);
-  const [activeTab, setActiveTab] = useState<'gallery' | 'catering'>('gallery');
+  const [activeTab, setActiveTab] = useState<'gallery' | 'catering' | 'support_requests'>('gallery');
   const [isConsultationModalOpen, setIsModalOpen] = useState(false);
-  const { user, logout, isAuthenticated, isAdmin } = useAuth();
+  const { user, logout, isAuthenticated, isAdmin, isSupport } = useAuth();
 
   return (
     <div className={`relative min-h-screen font-sans transition-colors duration-500 ${isDark ? 'bg-gray-900 text-gray-100 dark' : 'bg-[#fcfcfc] text-gray-900'}`}>
@@ -31,6 +32,9 @@ export const Home: React.FC = () => {
           <nav className="flex items-center space-x-8 text-sm font-medium tracking-wide">
             <button onClick={() => setActiveTab('gallery')} className={`transition ${activeTab === 'gallery' ? 'text-gold-500' : 'hover:text-gold-500'}`}>Gallery</button>
             <button onClick={() => setActiveTab('catering')} className={`transition ${activeTab === 'catering' ? 'text-gold-500' : 'hover:text-gold-500'}`}>Catering</button>
+            {(isAdmin || isSupport) && (
+              <button onClick={() => setActiveTab('support_requests')} className={`transition ${activeTab === 'support_requests' ? 'text-gold-500' : 'hover:text-gold-500'}`}>Support Requests</button>
+            )}
             {isAdmin && (
               <Link to="/admin" className="text-gold-500 hover:text-gold-600 transition font-bold">Admin</Link>
             )}
@@ -66,6 +70,7 @@ export const Home: React.FC = () => {
       <main className="relative z-10">
         {activeTab === 'gallery' && <BackdropGallery />}
         {activeTab === 'catering' && <CateringMenuSelector />}
+        {activeTab === 'support_requests' && <SupportRequests isDark={isDark} />}
       </main>
       
       {/* Footer */}
