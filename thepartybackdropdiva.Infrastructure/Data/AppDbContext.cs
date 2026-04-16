@@ -26,6 +26,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<ConsultationRequest> ConsultationRequests { get; set; } = null!;
     public DbSet<FollowUp> FollowUps { get; set; } = null!;
     public DbSet<SupportRequest> SupportRequests { get; set; } = null!;
+    public DbSet<Advisor> Advisors { get; set; } = null!;
+    public DbSet<AdvisorActiveConsultation> AdvisorActiveConsultations { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -51,6 +53,25 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
             .WithMany(b => b.FollowUps)
             .HasForeignKey(f => f.BookingId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // ConsultationRequest to FollowUps is 1-to-many
+        modelBuilder.Entity<FollowUp>()
+            .HasOne(f => f.ConsultationRequest)
+            .WithMany()
+            .HasForeignKey(f => f.ConsultationRequestId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        // Advisor assignments
+        modelBuilder.Entity<AdvisorActiveConsultation>()
+            .HasOne(ac => ac.Advisor)
+            .WithMany(a => a.ActiveConsultations)
+            .HasForeignKey(ac => ac.AdvisorId);
+
+        modelBuilder.Entity<AdvisorActiveConsultation>()
+            .HasOne(ac => ac.ConsultationRequest)
+            .WithMany()
+            .HasForeignKey(ac => ac.ConsultationRequestId);
+
 
         // Configure precision for decimals
         var decimals = modelBuilder.Model.GetEntityTypes()

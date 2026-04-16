@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using thepartybackdropdiva.Infrastructure.Data;
@@ -11,9 +12,11 @@ using thepartybackdropdiva.Infrastructure.Data;
 namespace thepartybackdropdiva.Infrastructure.Migrations.Postgres
 {
     [DbContext(typeof(PostgresAppDbContext))]
-    partial class PostgresAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260416165743_RenameMessageToCommentsPostgres")]
+    partial class RenameMessageToCommentsPostgres
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,64 +168,6 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.Postgres
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Advisor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Specialization")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Advisors");
-                });
-
-            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.AdvisorActiveConsultation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AdvisorId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("AssignedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("ConsultationRequestId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdvisorId");
-
-                    b.HasIndex("ConsultationRequestId");
-
-                    b.ToTable("AdvisorActiveConsultations");
                 });
 
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.ApplicationUser", b =>
@@ -414,10 +359,7 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.Postgres
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("BookingId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ConsultationRequestId")
+                    b.Property<Guid>("BookingId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -433,8 +375,6 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.Postgres
                     b.HasKey("Id");
 
                     b.HasIndex("BookingId");
-
-                    b.HasIndex("ConsultationRequestId");
 
                     b.ToTable("FollowUps");
                 });
@@ -746,51 +686,15 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.Postgres
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Advisor", b =>
-                {
-                    b.HasOne("thepartybackdropdiva.Domain.Entities.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.AdvisorActiveConsultation", b =>
-                {
-                    b.HasOne("thepartybackdropdiva.Domain.Entities.Advisor", "Advisor")
-                        .WithMany("ActiveConsultations")
-                        .HasForeignKey("AdvisorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("thepartybackdropdiva.Domain.Entities.ConsultationRequest", "ConsultationRequest")
-                        .WithMany()
-                        .HasForeignKey("ConsultationRequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Advisor");
-
-                    b.Navigation("ConsultationRequest");
-                });
-
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.FollowUp", b =>
                 {
                     b.HasOne("thepartybackdropdiva.Domain.Entities.Booking", "Booking")
                         .WithMany("FollowUps")
                         .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("thepartybackdropdiva.Domain.Entities.ConsultationRequest", "ConsultationRequest")
-                        .WithMany()
-                        .HasForeignKey("ConsultationRequestId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Booking");
-
-                    b.Navigation("ConsultationRequest");
                 });
 
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Invoice", b =>
@@ -840,11 +744,6 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.Postgres
                         .HasForeignKey("CateringMenuId");
 
                     b.Navigation("CateringMenu");
-                });
-
-            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Advisor", b =>
-                {
-                    b.Navigation("ActiveConsultations");
                 });
 
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Booking", b =>

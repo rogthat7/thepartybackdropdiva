@@ -1,6 +1,7 @@
 export interface ConsultationRequest {
   email?: string;
   phone?: string;
+  comments?: string;
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5148';
@@ -19,7 +20,7 @@ export const submitConsultation = async (request: ConsultationRequest): Promise<
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, phone })
+      body: JSON.stringify({ email, phone, comments: request.comments })
     });
 
     if (!response.ok) {

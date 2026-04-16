@@ -5,13 +5,14 @@ import { CateringMenuSelector } from './CateringMenuSelector';
 import { FireworksBackground } from './FireworksBackground';
 import { ConsultationModal } from './ConsultationModal';
 import { SupportRequests } from './SupportRequests';
+import { AdvisorAssignedConsultations } from './AdvisorAssignedConsultations';
 import { useAuth } from '../context/AuthContext';
 
 export const Home: React.FC = () => {
   const [isDark, setIsDark] = useState(true);
-  const [activeTab, setActiveTab] = useState<'gallery' | 'catering' | 'support_requests'>('gallery');
+  const [activeTab, setActiveTab] = useState<'gallery' | 'catering' | 'support_requests' | 'assigned_consultations'>('gallery');
   const [isConsultationModalOpen, setIsModalOpen] = useState(false);
-  const { user, logout, isAuthenticated, isAdmin, isSupport } = useAuth();
+  const { user, logout, isAuthenticated, isAdmin, isSupport, isAdvisor } = useAuth();
 
   return (
     <div className={`relative min-h-screen font-sans transition-colors duration-500 ${isDark ? 'bg-gray-900 text-gray-100 dark' : 'bg-[#fcfcfc] text-gray-900'}`}>
@@ -34,6 +35,9 @@ export const Home: React.FC = () => {
             <button onClick={() => setActiveTab('catering')} className={`transition ${activeTab === 'catering' ? 'text-gold-500' : 'hover:text-gold-500'}`}>Catering</button>
             {(isAdmin || isSupport) && (
               <button onClick={() => setActiveTab('support_requests')} className={`transition ${activeTab === 'support_requests' ? 'text-gold-500' : 'hover:text-gold-500'}`}>Support Requests</button>
+            )}
+            {(isAdmin || isAdvisor) && (
+              <button onClick={() => setActiveTab('assigned_consultations')} className={`transition ${activeTab === 'assigned_consultations' ? 'text-gold-500 font-bold' : 'hover:text-gold-500 font-semibold'}`}>Assignments</button>
             )}
             {isAdmin && (
               <Link to="/admin" className="text-gold-500 hover:text-gold-600 transition font-bold">Admin</Link>
@@ -71,6 +75,7 @@ export const Home: React.FC = () => {
         {activeTab === 'gallery' && <BackdropGallery />}
         {activeTab === 'catering' && <CateringMenuSelector />}
         {activeTab === 'support_requests' && <SupportRequests isDark={isDark} />}
+        {activeTab === 'assigned_consultations' && <AdvisorAssignedConsultations isDark={isDark} />}
       </main>
       
       {/* Footer */}

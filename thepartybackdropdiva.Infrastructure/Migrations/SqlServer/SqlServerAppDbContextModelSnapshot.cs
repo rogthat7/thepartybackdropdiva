@@ -168,6 +168,64 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Advisor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Specialization")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Advisors");
+                });
+
+            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.AdvisorActiveConsultation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AdvisorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AssignedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ConsultationRequestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvisorId");
+
+                    b.HasIndex("ConsultationRequestId");
+
+                    b.ToTable("AdvisorActiveConsultations");
+                });
+
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<Guid>("Id")
@@ -324,13 +382,13 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
@@ -358,7 +416,10 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("BookingId")
+                    b.Property<Guid?>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ConsultationRequestId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
@@ -374,6 +435,8 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
                     b.HasKey("Id");
 
                     b.HasIndex("BookingId");
+
+                    b.HasIndex("ConsultationRequestId");
 
                     b.ToTable("FollowUps");
                 });
@@ -685,15 +748,51 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Advisor", b =>
+                {
+                    b.HasOne("thepartybackdropdiva.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.AdvisorActiveConsultation", b =>
+                {
+                    b.HasOne("thepartybackdropdiva.Domain.Entities.Advisor", "Advisor")
+                        .WithMany("ActiveConsultations")
+                        .HasForeignKey("AdvisorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("thepartybackdropdiva.Domain.Entities.ConsultationRequest", "ConsultationRequest")
+                        .WithMany()
+                        .HasForeignKey("ConsultationRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Advisor");
+
+                    b.Navigation("ConsultationRequest");
+                });
+
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.FollowUp", b =>
                 {
                     b.HasOne("thepartybackdropdiva.Domain.Entities.Booking", "Booking")
                         .WithMany("FollowUps")
                         .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("thepartybackdropdiva.Domain.Entities.ConsultationRequest", "ConsultationRequest")
+                        .WithMany()
+                        .HasForeignKey("ConsultationRequestId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Booking");
+
+                    b.Navigation("ConsultationRequest");
                 });
 
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Invoice", b =>
@@ -743,6 +842,11 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
                         .HasForeignKey("CateringMenuId");
 
                     b.Navigation("CateringMenu");
+                });
+
+            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Advisor", b =>
+                {
+                    b.Navigation("ActiveConsultations");
                 });
 
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Booking", b =>

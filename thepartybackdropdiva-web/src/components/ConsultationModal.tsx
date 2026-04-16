@@ -10,6 +10,7 @@ interface ConsultationModalProps {
 export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, onClose, isDark }) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [comments, setComments] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   if (!isOpen) return null;
@@ -20,12 +21,13 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
     
     setStatus('loading');
     try {
-      await submitConsultation({ email, phone });
+      await submitConsultation({ email, phone, comments });
       setStatus('success');
       setTimeout(() => {
         setStatus('idle');
         setEmail('');
         setPhone('');
+        setComments('');
         onClose();
       }, 2000);
     } catch (error) {
@@ -76,6 +78,17 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
                   onChange={e => setPhone(e.target.value)}
                   placeholder="+1 234 567 8900"
                   className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-500 transition-colors ${isDark ? 'bg-gray-900 border-gray-700 text-white placeholder-gray-600' : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'} border`}
+                  disabled={status === 'loading'}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 opacity-80">Additional Comments</label>
+                <textarea 
+                  value={comments}
+                  onChange={e => setComments(e.target.value)}
+                  placeholder="Tell us about your event..."
+                  rows={3}
+                  className={`w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-500 transition-colors ${isDark ? 'bg-gray-900 border-gray-700 text-white placeholder-gray-600' : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'} border resize-none`}
                   disabled={status === 'loading'}
                 />
               </div>

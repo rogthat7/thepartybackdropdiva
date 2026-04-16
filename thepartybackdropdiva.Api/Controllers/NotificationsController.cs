@@ -10,7 +10,7 @@ public class ConsultationRequestDto
 {
     public string? Email { get; set; }
     public string? Phone { get; set; }
-    public string? Message { get; set; }
+    public string? Comments { get; set; }
 }
 
 public class SupportEmailDto
@@ -47,7 +47,7 @@ public class NotificationsController : ControllerBase
         {
             Email = request.Email,
             Phone = request.Phone,
-            Message = request.Message,
+            Comments = request.Comments,
             Status = "Pending"
         };
 

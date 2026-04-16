@@ -4,7 +4,7 @@ export interface AdminConsultationRequest {
   id: string;
   email?: string;
   phone?: string;
-  message?: string;
+  comments?: string;
   status: string;
   createdAt: string;
 }

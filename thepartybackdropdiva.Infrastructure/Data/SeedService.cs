@@ -16,7 +16,7 @@ public static class SeedService
         await context.Database.MigrateAsync();
 
         // Seed Roles
-        string[] roleNames = { "Admin", "Member", "Guest", "Support" };
+        string[] roleNames = { "Admin", "Member", "Guest", "Support", "Advisor" };
         foreach (var roleName in roleNames)
         {
             if (!await roleManager.RoleExistsAsync(roleName))
@@ -62,6 +62,38 @@ public static class SeedService
             if (result.Succeeded)
             {
                 await userManager.AddToRoleAsync(supportUser, "Support");
+            }
+        }
+
+        // Seed Advisor User
+        var advisorEmail = "consultant@thepartybackdropdiva.com";
+        if (await userManager.FindByEmailAsync(advisorEmail) == null)
+        {
+            var advisorUser = new ApplicationUser
+            {
+                UserName = advisorEmail,
+                Email = advisorEmail,
+                FirstName = "Expert",
+                LastName = "Consultant",
+                EmailConfirmed = true
+            };
+
+            var result = await userManager.CreateAsync(advisorUser, "Advisor@123!");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(advisorUser, "Advisor");
+                
+                // Create Advisor Entity
+                if (!await context.Advisors.AnyAsync(a => a.UserId == advisorUser.Id))
+                {
+                    context.Advisors.Add(new Advisor
+                    {
+                        UserId = advisorUser.Id,
+                        Specialization = "Event Backdrops & Themes",
+                        IsActive = true
+                    });
+                    await context.SaveChangesAsync();
+                }
             }
         }
 
