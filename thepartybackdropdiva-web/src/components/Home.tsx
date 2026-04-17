@@ -7,12 +7,13 @@ import { ConsultationModal } from './ConsultationModal';
 import { SupportRequests } from './SupportRequests';
 import { AdvisorAssignedConsultations } from './AdvisorAssignedConsultations';
 import { useAuth } from '../context/AuthContext';
+import { UserMenu } from './UserMenu';
 
 export const Home: React.FC = () => {
   const [isDark, setIsDark] = useState(true);
   const [activeTab, setActiveTab] = useState<'gallery' | 'catering' | 'support_requests' | 'assigned_consultations'>('gallery');
   const [isConsultationModalOpen, setIsModalOpen] = useState(false);
-  const { user, logout, isAuthenticated, isAdmin, isSupport, isAdvisor } = useAuth();
+  const { user, isAuthenticated, isAdmin, isSupport, isAdvisor } = useAuth();
 
   return (
     <div className={`relative min-h-screen font-sans transition-colors duration-500 ${isDark ? 'bg-gray-900 text-gray-100 dark' : 'bg-[#fcfcfc] text-gray-900'}`}>
@@ -21,13 +22,6 @@ export const Home: React.FC = () => {
       <header className={`relative py-6 border-b shadow-sm sticky top-0 z-50 transition-colors ${isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}>
         <div className="max-w-7xl mx-auto px-8 flex justify-between items-center">
           <div className="flex items-center gap-6">
-            <button 
-              onClick={() => setIsDark(!isDark)}
-              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-2xl"
-              title="Toggle Night Theme"
-            >
-              {isDark ? '🌙' : '☀️'}
-            </button>
             <h1 className="text-2xl font-light tracking-widest uppercase">The Party Backdrop <span className="font-semibold text-gold-500">Diva</span></h1>
           </div>
           <nav className="flex items-center space-x-8 text-sm font-medium tracking-wide">
@@ -40,16 +34,16 @@ export const Home: React.FC = () => {
               <button onClick={() => setActiveTab('assigned_consultations')} className={`transition ${activeTab === 'assigned_consultations' ? 'text-gold-500 font-bold' : 'hover:text-gold-500 font-semibold'}`}>Assignments</button>
             )}
             {isAdmin && (
-              <Link to="/admin" className="text-gold-500 hover:text-gold-600 transition font-bold">Admin</Link>
+              <Link to="/admin" className="text-gold-500 hover:text-gold-600 transition font-bold">Dashboard</Link>
             )}
             {isAuthenticated && !isAdmin && (
               <Link to="/my-events" className="text-gold-500 hover:text-gold-600 transition">My Events</Link>
             )}
             
             {isAuthenticated ? (
-              <div className="flex items-center gap-4 border-l border-gray-800 pl-8 ml-4">
-                <span className="text-gray-400">Hi, {user?.firstName}</span>
-                <button onClick={logout} className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full transition">Logout</button>
+              <div className="flex items-center gap-4 border-l border-gray-200 dark:border-gray-800 pl-8 ml-4">
+                <span className="text-xs font-semibold uppercase tracking-widest text-gray-400 hidden md:block">Hi, {user?.firstName}</span>
+                <UserMenu isDark={isDark} setIsDark={setIsDark} />
               </div>
             ) : (
               <Link to="/login" className="bg-gold-500 hover:bg-gold-600 text-white px-6 py-2 rounded-full transition shadow-md">Login</Link>

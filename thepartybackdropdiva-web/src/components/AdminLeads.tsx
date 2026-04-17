@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { type AdminConsultationRequest, getAllConsultations, updateConsultationStatus, deleteConsultationRequest, getAllBookings } from '../services/ConsultationService';
 import { AdminFollowUpForm } from './AdminFollowUpForm';
 import { type AdvisorDto, getAllAdvisors, assignAdvisor } from '../services/AdvisorService';
@@ -93,6 +94,12 @@ export const AdminLeads: React.FC = () => {
         <div className="max-w-7xl mx-auto px-8 py-12">
             <div className="flex justify-between items-end mb-8">
                 <div>
+                    <Link to="/" className="text-gold-500 hover:text-gold-600 mb-6 inline-flex items-center gap-2 transition-colors group">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        <span className="text-sm font-semibold uppercase tracking-wider">Back to Home</span>
+                    </Link>
                     <h2 className="text-3xl font-light mb-4">Administration <span className="font-semibold text-gold-500">Dashboard</span></h2>
                     <div className="flex gap-4">
                         <button
