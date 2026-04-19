@@ -53,7 +53,7 @@ export const YourEvents: React.FC = () => {
                                             <span className="opacity-50 italic">Location:</span> {event.eventLocation}
                                         </p>
                                     </div>
-                                    <div className={`px-6 py-2 rounded-full text-sm font-semibold tracking-wide border ${
+                                    <div className={`px-6 py-2 rounded-2xl text-sm font-semibold tracking-wide border ${
                                         event.status === 'Inquiry' ? 'bg-blue-50 text-blue-600 border-blue-100' : 
                                         event.status === 'Following Up' ? 'bg-amber-50 text-amber-600 border-amber-100' : 
                                         'bg-green-50 text-green-600 border-green-100'

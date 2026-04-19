@@ -53,7 +53,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ isDark, setIsDark }) => {
             {/* Trigger */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all text-gray-500 hover:text-gold-500"
+                className="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all text-gray-500 hover:text-gold-500"
                 title="Settings"
             >
                 <FontAwesomeIcon icon={faGear} className={`text-xl transition-transform duration-500 ${isOpen ? 'rotate-90 text-gold-500' : ''}`} />

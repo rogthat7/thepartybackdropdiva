@@ -17,16 +17,16 @@ export const ErrorPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-1 rounded-full inline-flex gap-2 p-2">
+        <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-1 rounded-2xl inline-flex gap-2 p-2">
             <button 
                 onClick={() => window.location.reload()}
-                className="bg-gold-500 hover:bg-gold-600 text-white px-8 py-3 rounded-full font-bold tracking-widest uppercase transition-all shadow-lg hover:shadow-gold-500/40"
+                className="bg-gold-500 hover:bg-gold-600 text-white px-8 py-3 rounded-2xl font-bold tracking-widest uppercase transition-all shadow-lg hover:shadow-gold-500/40"
             >
                 Try Again
             </button>
             <Link 
                 to="/" 
-                className="text-gray-300 hover:text-white px-8 py-3 rounded-full font-bold tracking-widest uppercase transition-all"
+                className="text-gray-300 hover:text-white px-8 py-3 rounded-2xl font-bold tracking-widest uppercase transition-all"
             >
                 Go Home
             </Link>

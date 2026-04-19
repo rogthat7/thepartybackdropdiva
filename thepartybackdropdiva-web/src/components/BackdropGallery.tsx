@@ -68,7 +68,7 @@ export const BackdropGallery: React.FC = () => {
                 {isAdmin && (
                     <button 
                         onClick={() => setShowAddModal(true)}
-                        className="mt-12 px-8 py-3 bg-gray-900 dark:bg-gray-100 dark:text-gray-900 text-white rounded-full text-sm font-medium hover:bg-gold-600 dark:hover:bg-gold-500 transition-all shadow-xl hover:scale-105"
+                        className="mt-12 px-8 py-3 bg-gray-900 dark:bg-gray-100 dark:text-gray-900 text-white rounded-2xl text-sm font-medium hover:bg-gold-600 dark:hover:bg-gold-500 transition-all shadow-xl hover:scale-105"
                     >
                         <FontAwesomeIcon icon={faPlus} className="mr-2" /> New Collection
                     </button>
@@ -107,7 +107,7 @@ export const BackdropGallery: React.FC = () => {
                             <div className="absolute top-4 right-4 flex gap-2">
                                 <button 
                                     onClick={() => handleDelete(col.id)}
-                                    className="w-10 h-10 bg-white/90 dark:bg-gray-900/90 text-red-500 rounded-full flex items-center justify-center shadow-lg hover:bg-red-500 hover:text-white transition-all transform hover:rotate-12"
+                                    className="w-10 h-10 bg-white/90 dark:bg-gray-900/90 text-red-500 rounded-xl flex items-center justify-center shadow-lg hover:bg-red-500 hover:text-white transition-all transform hover:rotate-12"
                                 >
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>
@@ -126,7 +126,7 @@ export const BackdropGallery: React.FC = () => {
                     {/* Header Controls */}
                     <button 
                         onClick={() => setSelectedCollection(null)}
-                        className="fixed top-10 right-10 w-14 h-14 flex items-center justify-center rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-500 hover:text-gold-500 hover:scale-110 transition-all z-[80] shadow-xl border border-gray-100 dark:border-gray-700"
+                        className="fixed top-10 right-10 w-14 h-14 flex items-center justify-center rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-500 hover:text-gold-500 hover:scale-110 transition-all z-[80] shadow-xl border border-gray-100 dark:border-gray-700"
                     >
                         <FontAwesomeIcon icon={faXmark} size="xl" />
                     </button>
@@ -196,7 +196,7 @@ export const BackdropGallery: React.FC = () => {
                                                         className="object-cover w-full h-full transition-transform duration-[3000ms] ease-out group-hover:scale-105" 
                                                     />
                                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500 flex items-center justify-center">
-                                                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-4 group-hover:translate-y-0 bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-full text-white text-xs font-bold uppercase tracking-widest">
+                                                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-4 group-hover:translate-y-0 bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-2xl text-white text-xs font-bold uppercase tracking-widest">
                                                             View Details
                                                         </div>
                                                     </div>

@@ -74,7 +74,7 @@ export const SupportRequests: React.FC<{ isDark: boolean }> = ({ isDark }) => {
                                         <p className="text-sm opacity-70 line-clamp-2 max-w-md">{request.message}</p>
                                     </td>
                                     <td className="px-8 py-6">
-                                        <span className={`px-4 py-1.5 rounded-full text-[10px] uppercase tracking-widest font-bold shadow-sm ${
+                                        <span className={`px-4 py-1.5 rounded-2xl text-[10px] uppercase tracking-widest font-bold shadow-sm ${
                                             request.status === 'Pending' 
                                             ? 'bg-gold-500/20 text-gold-500' 
                                             : 'bg-green-500/20 text-green-500'

@@ -40,7 +40,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
       <div className={`relative w-full max-w-md p-8 rounded-2xl shadow-2xl transition-colors duration-300 ${isDark ? 'bg-gray-800 text-gray-100 border border-gray-700' : 'bg-white text-gray-900 border border-gray-100'}`}>
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+          className="absolute top-4 right-4 p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition"
           aria-label="Close"
           disabled={status === 'loading'}
         >
@@ -100,7 +100,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
               <button 
                 type="submit"
                 disabled={status === 'loading'}
-                className="w-full mt-6 bg-gold-500 hover:bg-gold-600 text-white px-8 py-3 rounded-full font-medium tracking-wide transition shadow-md hover:shadow-lg disabled:opacity-50"
+                className="w-full mt-6 bg-gold-500 hover:bg-gold-600 text-white px-8 py-3 rounded-2xl font-medium tracking-wide transition shadow-md hover:shadow-lg disabled:opacity-50"
               >
                 {status === 'loading' ? 'SENDING...' : 'GO'}
               </button>

@@ -68,7 +68,7 @@ export const CateringMenuSelector: React.FC = () => {
                         ${calculateEstimate().toFixed(2)}
                     </div>
                     {guestCount >= 100 && (
-                        <span className="inline-block bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full font-medium">
+                        <span className="inline-block bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-lg font-medium">
                             Volume Discount Applied
                         </span>
                     )}

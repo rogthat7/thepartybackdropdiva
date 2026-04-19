@@ -25,13 +25,13 @@ export const NotFound: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
           <Link 
             to="/" 
-            className="bg-gold-500 hover:bg-gold-600 text-white px-8 py-3 rounded-full font-bold tracking-widest uppercase transition-all shadow-lg hover:shadow-gold-500/40 w-full sm:w-auto text-center"
+            className="bg-gold-500 hover:bg-gold-600 text-white px-8 py-3 rounded-2xl font-bold tracking-widest uppercase transition-all shadow-lg hover:shadow-gold-500/40 w-full sm:w-auto text-center"
           >
             Return to Entrance
           </Link>
           <Link 
             to="/support" 
-            className="border border-white/20 hover:border-gold-500/50 hover:text-gold-500 text-gray-300 px-8 py-3 rounded-full font-bold tracking-widest uppercase transition-all w-full sm:w-auto text-center"
+            className="border border-white/20 hover:border-gold-500/50 hover:text-gold-500 text-gray-300 px-8 py-3 rounded-2xl font-bold tracking-widest uppercase transition-all w-full sm:w-auto text-center"
           >
             Contact Support
           </Link>

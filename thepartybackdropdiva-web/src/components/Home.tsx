@@ -61,7 +61,7 @@ export const Home: React.FC = () => {
                 <UserMenu isDark={isDark} setIsDark={setIsDark} />
               </div>
             ) : (
-              <Link to="/login" className="bg-gold-500 hover:bg-gold-600 text-white px-6 py-2 rounded-full transition shadow-md">Login</Link>
+              <Link to="/login" className="bg-gold-500 hover:bg-gold-600 text-white px-6 py-2 rounded-2xl transition shadow-md">Login</Link>
             )}
           </nav>
         </div>
@@ -76,7 +76,7 @@ export const Home: React.FC = () => {
         <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-10">Luxury backdrops and premium catering services designed to create unforgettable experiences.</p>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-gold-500 hover:bg-gold-600 text-white px-8 py-4 rounded-full font-medium tracking-wide transition shadow-lg hover:shadow-xl"
+          className="bg-gold-500 hover:bg-gold-600 text-white px-8 py-4 rounded-2xl font-medium tracking-wide transition shadow-lg hover:shadow-xl"
         >
           Book a Consultation
         </button>
