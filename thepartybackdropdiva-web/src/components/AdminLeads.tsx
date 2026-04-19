@@ -3,19 +3,22 @@ import { Link } from 'react-router-dom';
 import { type AdminConsultationRequest, getAllConsultations, updateConsultationStatus, deleteConsultationRequest, getAllBookings } from '../services/ConsultationService';
 import { AdminFollowUpForm } from './AdminFollowUpForm';
 import { type AdvisorDto, getAllAdvisors, assignAdvisor } from '../services/AdvisorService';
+import { SupportRequests } from './SupportRequests';
+import { AdvisorAssignedConsultations } from './AdvisorAssignedConsultations';
+
 
 export const AdminLeads: React.FC = () => {
     const [leads, setLeads] = useState<AdminConsultationRequest[]>([]);
     const [bookings, setBookings] = useState<any[]>([]);
     const [advisors, setAdvisors] = useState<AdvisorDto[]>([]);
-    const [view, setView] = useState<'leads' | 'bookings'>('leads');
+    const [view, setView] = useState<'leads' | 'bookings' | 'support' | 'assignments'>('leads');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [activeBookingId, setActiveBookingId] = useState<string | null>(null);
 
     useEffect(() => {
         if (view === 'leads') fetchLeads();
-        else fetchBookings();
+        else if (view === 'bookings') fetchBookings();
         
         fetchAdvisors();
     }, [view]);
@@ -113,6 +116,18 @@ export const AdminLeads: React.FC = () => {
                             className={`px-6 py-2 rounded-full text-sm font-semibold transition-all ${view === 'bookings' ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200'}`}
                         >
                             Bookings
+                        </button>
+                        <button
+                            onClick={() => setView('support')}
+                            className={`px-6 py-2 rounded-full text-sm font-semibold transition-all ${view === 'support' ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200'}`}
+                        >
+                            Support Requests
+                        </button>
+                        <button
+                            onClick={() => setView('assignments')}
+                            className={`px-6 py-2 rounded-full text-sm font-semibold transition-all ${view === 'assignments' ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200'}`}
+                        >
+                            Assignments
                         </button>
                     </div>
                 </div>
@@ -214,7 +229,7 @@ export const AdminLeads: React.FC = () => {
                         </div>
                     )}
                 </div>
-            ) : (
+            ) : view === 'bookings' ? (
                 <div className="space-y-6">
                     {bookings.map(booking => (
                         <div key={booking.id} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden shadow-sm">
@@ -251,6 +266,14 @@ export const AdminLeads: React.FC = () => {
                         </div>
                     ))}
                     {bookings.length === 0 && <div className="p-12 text-center text-gray-500 italic">No bookings found.</div>}
+                </div>
+            ) : view === 'support' ? (
+                <div className="-mt-12">
+                     <SupportRequests isDark={true} />
+                </div>
+            ) : (
+                <div className="-mt-12">
+                    <AdvisorAssignedConsultations isDark={true} />
                 </div>
             )}
         </div>

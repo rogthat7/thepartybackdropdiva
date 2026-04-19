@@ -11,5 +11,8 @@ public class MappingProfile : Profile
         CreateMap<MenuItem, MenuItemDto>();
         CreateMap<CateringMenu, CateringMenuDto>();
         CreateMap<BackdropTheme, BackdropThemeDto>();
+        CreateMap<BackdropCollection, BackdropCollectionDto>();
+        CreateMap<BackdropImage, BackdropImageDto>();
+
     }
 }

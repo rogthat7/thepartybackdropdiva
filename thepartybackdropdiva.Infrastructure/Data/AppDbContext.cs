@@ -28,6 +28,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<SupportRequest> SupportRequests { get; set; } = null!;
     public DbSet<Advisor> Advisors { get; set; } = null!;
     public DbSet<AdvisorActiveConsultation> AdvisorActiveConsultations { get; set; } = null!;
+    public DbSet<BackdropCollection> BackdropCollections { get; set; } = null!;
+    public DbSet<BackdropImage> BackdropImages { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

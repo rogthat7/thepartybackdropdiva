@@ -196,5 +196,59 @@ public static class SeedService
 
             await context.SaveChangesAsync();
         }
+
+        if (!await context.BackdropCollections.AnyAsync())
+        {
+            var floralCollection = new BackdropCollection
+            {
+                Name = "Classic Floral Series",
+                Description = "Our signature curated selection of 10 unique, high-resolution floral backdrops.",
+                CoverImageUrl = "https://images.unsplash.com/photo-1541532713592-79a0317b6b77?auto=format&fit=crop&q=80&w=800"
+            };
+
+            var images = new List<BackdropImage>
+            {
+                new BackdropImage { Title = "Victorian Rose Garden", ImageUrl = "/images/backdrops/generated/victorian_rose.png", Collection = floralCollection },
+                new BackdropImage { Title = "Cherry Blossom Serenity", ImageUrl = "/images/backdrops/generated/cherry_blossom.png", Collection = floralCollection },
+                new BackdropImage { Title = "Wildflower Meadow", ImageUrl = "/images/backdrops/generated/wildflower_meadow.png", Collection = floralCollection },
+                new BackdropImage { Title = "Tropical Orchid Paradise", ImageUrl = "/images/backdrops/generated/tropical_orchid.png", Collection = floralCollection },
+                new BackdropImage { Title = "English Cottage Lavender", ImageUrl = "/images/backdrops/generated/english_cottage.png", Collection = floralCollection },
+                new BackdropImage { Title = "Golden Autumn Dahlia", ImageUrl = "/images/backdrops/generated/golden_autumn.png", Collection = floralCollection },
+                new BackdropImage { Title = "Whispering White Lily", ImageUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=1200", Collection = floralCollection },
+                new BackdropImage { 
+                    Title = "Desert Bloom", 
+                    ImageUrl = "/images/backdrops/generated/desert_bloom.png", 
+                    AdditionalImageUrls = new[] {
+                        "https://images.unsplash.com/photo-1469533778471-92a68acc3633?auto=format&fit=crop&q=80&w=1200",
+                        "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80&w=1200",
+                        "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?auto=format&fit=crop&q=80&w=1200"
+                    },
+                    Collection = floralCollection 
+                },
+                new BackdropImage { Title = "Midnight Garden Wisteria", ImageUrl = "/images/backdrops/generated/midnight_wisteria.png", Collection = floralCollection },
+                new BackdropImage { Title = "Springtime Tulip Burst", ImageUrl = "https://images.unsplash.com/photo-1520302830754-8d1a10389382?auto=format&fit=crop&q=80&w=1200", Collection = floralCollection }
+            };
+
+            context.BackdropCollections.Add(floralCollection);
+            context.BackdropImages.AddRange(images);
+
+            // Add other collections as placeholders
+            context.BackdropCollections.Add(new BackdropCollection
+            {
+                Name = "Rustic Wooden Arch",
+                Description = "Handcrafted wooden geometries decorated with various botanicals.",
+                CoverImageUrl = "https://images.unsplash.com/photo-1510076857177-7470076d4098?auto=format&fit=crop&q=80&w=800"
+            });
+
+            context.BackdropCollections.Add(new BackdropCollection
+            {
+                Name = "Neon Glamour",
+                Description = "High-energy sequin walls and vibrant neon statements.",
+                CoverImageUrl = "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=800"
+            });
+
+            await context.SaveChangesAsync();
+        }
+
     }
 }

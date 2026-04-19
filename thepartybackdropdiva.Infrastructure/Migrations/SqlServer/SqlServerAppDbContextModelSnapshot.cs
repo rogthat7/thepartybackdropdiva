@@ -301,6 +301,67 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.BackdropCollection", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CoverImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BackdropCollections");
+                });
+
+            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.BackdropImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BackdropCollectionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BackdropCollectionId");
+
+                    b.ToTable("BackdropImages");
+                });
+
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Booking", b =>
                 {
                     b.Property<Guid>("Id")
@@ -778,6 +839,17 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
                     b.Navigation("ConsultationRequest");
                 });
 
+            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.BackdropImage", b =>
+                {
+                    b.HasOne("thepartybackdropdiva.Domain.Entities.BackdropCollection", "Collection")
+                        .WithMany("Images")
+                        .HasForeignKey("BackdropCollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Collection");
+                });
+
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.FollowUp", b =>
                 {
                     b.HasOne("thepartybackdropdiva.Domain.Entities.Booking", "Booking")
@@ -847,6 +919,11 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.SqlServer
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Advisor", b =>
                 {
                     b.Navigation("ActiveConsultations");
+                });
+
+            modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.BackdropCollection", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("thepartybackdropdiva.Domain.Entities.Booking", b =>

@@ -38,10 +38,32 @@ export interface CateringMenuDto {
     menuItems: MenuItemDto[];
 }
 
+export interface BackdropImageDto {
+    id: string;
+    backdropCollectionId: string;
+    imageUrl: string;
+    additionalImageUrls?: string[];
+    title: string;
+}
+
+export interface BackdropCollectionDto {
+    id: string;
+    name: string;
+    description: string;
+    coverImageUrl?: string;
+    images: BackdropImageDto[];
+}
+
 export const fetchBackdrops = async () => {
     const res = await apiClient.get<BackdropThemeDto[]>('/Catalog/backdrops');
     return res.data;
 };
+
+export const fetchBackdropCollections = async () => {
+    const res = await apiClient.get<BackdropCollectionDto[]>('/BackdropCollections');
+    return res.data;
+};
+
 
 export const fetchMenus = async () => {
     const res = await apiClient.get<CateringMenuDto[]>('/Catalog/menus');
@@ -77,7 +99,46 @@ export const fetchMyEvents = async () => {
 };
 
 // Admin Endpoints
+// Admin Backdrop Collection Endpoints
+export const createBackdropCollection = async (dto: Partial<BackdropCollectionDto>) => {
+    const token = localStorage.getItem('auth_token');
+    const res = await apiClient.post<BackdropCollectionDto>('/BackdropCollections', dto, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return res.data;
+};
+
+export const updateBackdropCollection = async (id: string, dto: Partial<BackdropCollectionDto>) => {
+    const token = localStorage.getItem('auth_token');
+    await apiClient.put(`/BackdropCollections/${id}`, dto, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+};
+
+export const deleteBackdropCollection = async (id: string) => {
+    const token = localStorage.getItem('auth_token');
+    await apiClient.delete(`/BackdropCollections/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+};
+
+export const addBackdropImage = async (collectionId: string, dto: Partial<BackdropImageDto>) => {
+    const token = localStorage.getItem('auth_token');
+    const res = await apiClient.post<BackdropImageDto>(`/BackdropCollections/${collectionId}/images`, dto, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return res.data;
+};
+
+export const deleteBackdropImage = async (collectionId: string, imageId: string) => {
+    const token = localStorage.getItem('auth_token');
+    await apiClient.delete(`/BackdropCollections/${collectionId}/images/${imageId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+};
+
 export const addBookingFollowUp = async (bookingId: string, note: string) => {
+
     const token = localStorage.getItem('auth_token');
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/bookings/${bookingId}/followup`, {
         method: 'POST',

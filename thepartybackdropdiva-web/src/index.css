@@ -1,4 +1,41 @@
+/* Import Bootstrap first so our custom styles and Tailwind can override it */
+@import "bootstrap/dist/css/bootstrap.min.css";
 @import "tailwindcss";
+
+/* 
+  FIX: Bootstrap global resets often conflict with Tailwind's utility classes.
+  We explicitly restore transparency and layout for our navigation buttons.
+*/
+button {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-transform: none;
+}
+
+/* Restore Luxury Button Aesthetics */
+button.bg-gold-500 {
+    background-color: #d4af37;
+    color: white;
+    padding: 1rem 2rem;
+}
+
+button.bg-gray-900 {
+    background-color: #111827;
+    color: white;
+    padding: 1rem 2rem;
+}
+
+
+nav button {
+    display: inline-flex;
+    align-items: center;
+}
+
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -7,8 +44,63 @@
   --color-gold-600: #aa8c2c;
 }
 
-body {
+body, html {
     background-color: #fcfcfc;
     color: #1a1a1a;
     font-family: 'Inter', sans-serif;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Edge */
 }
+
+body::-webkit-scrollbar, 
+html::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, etc. */
+}
+
+
+/* Luxury Carousel Styles */
+.luxury-carousel .carousel-indicators [data-bs-target] {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #d4af37;
+    margin: 0 6px;
+    opacity: 0.3;
+    transition: all 0.5s ease;
+    border: none;
+}
+
+.luxury-carousel .carousel-indicators .active {
+    width: 24px;
+    border-radius: 10px;
+    opacity: 1;
+}
+
+.luxury-carousel .carousel-control-prev-icon,
+.luxury-carousel .carousel-control-next-icon {
+    width: 3rem;
+    height: 3rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    background-size: 40% 40%;
+    transition: all 0.3s ease;
+}
+
+.luxury-carousel .carousel-control-prev-icon:hover,
+.luxury-carousel .carousel-control-next-icon:hover {
+    background-color: #d4af37;
+    transform: scale(1.1);
+}
+
+.hide-scrollbar::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.hide-scrollbar,
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
