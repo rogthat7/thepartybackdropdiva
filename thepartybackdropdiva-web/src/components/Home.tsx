@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { BackdropGallery } from './BackdropGallery';
 import { CateringMenuSelector } from './CateringMenuSelector';
@@ -13,7 +13,6 @@ export const Home: React.FC = () => {
   const [isDark, setIsDark] = useState(true);
   const [activeTab, setActiveTab] = useState<'home' | 'gallery' | 'catering' | 'support_requests' | 'assigned_consultations'>('home');
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const path = location.pathname;
@@ -25,12 +24,6 @@ export const Home: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [location.pathname]);
 
-  const handleTabChange = (tab: typeof activeTab) => {
-    if (tab === 'home') navigate('/');
-    else if (tab === 'support_requests') navigate('/support-requests');
-    else navigate(`/${tab}`);
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  };
 
   const [isConsultationModalOpen, setIsModalOpen] = useState(false);
   const { user, isAuthenticated, isAdmin, isSupport, isAdvisor } = useAuth();

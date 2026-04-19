@@ -17,6 +17,17 @@ button {
     text-transform: none;
 }
 
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #d4af37; /* gold-500 */
+    text-decoration: none;
+}
+
 /* Restore Luxury Button Aesthetics */
 button.bg-gold-500 {
     background-color: #d4af37;

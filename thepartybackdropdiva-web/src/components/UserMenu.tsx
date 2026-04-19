@@ -62,12 +62,12 @@ export const UserMenu: React.FC<UserMenuProps> = ({ isDark, setIsDark }) => {
             {/* Dropdown Menu */}
             {isOpen && (
                 <div className="absolute right-0 mt-3 w-72 bg-white/80 dark:bg-gray-900/90 backdrop-blur-xl border border-gray-100 dark:border-gray-800 rounded-3xl shadow-2xl overflow-hidden z-50 animate-in fade-in zoom-in duration-200">
-                    <div className="p-4 space-y-1">
+                    <div className="p-3 space-y-1">
                         {menuItems.map((item, index) => (
                             <Link
                                 key={index}
                                 to={item.to}
-                                className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors group"
+                                className="flex items-center gap-3 px-4 py-2 rounded-2xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors group"
                                 onClick={() => setIsOpen(false)}
                             >
                                 <FontAwesomeIcon icon={item.icon} className="w-4 h-4 text-gray-400 group-hover:text-gold-500" />
@@ -78,12 +78,12 @@ export const UserMenu: React.FC<UserMenuProps> = ({ isDark, setIsDark }) => {
 
                     <div className="border-t border-gray-100 dark:border-gray-800 my-1"></div>
 
-                    <div className="p-4 space-y-1">
+                    <div className="p-3 space-y-1">
                         {preferenceItems.map((item, index) => (
                             <Link
                                 key={index}
                                 to={item.to}
-                                className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors group"
+                                className="flex items-center gap-3 px-4 py-2 rounded-2xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors group"
                                 onClick={() => setIsOpen(false)}
                             >
                                 <FontAwesomeIcon icon={item.icon} className="w-4 h-4 text-gray-400 group-hover:text-gold-500" />
@@ -95,7 +95,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ isDark, setIsDark }) => {
                                 logout();
                                 setIsOpen(false);
                             }}
-                            className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-sm font-medium text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors group"
+                            className="flex items-center gap-3 w-full px-4 py-2 rounded-2xl text-sm font-medium text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors group"
                         >
                             <FontAwesomeIcon icon={faRightFromBracket} className="w-4 h-4" />
                             Sign out
@@ -105,7 +105,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ isDark, setIsDark }) => {
                     <div className="border-t border-gray-100 dark:border-gray-800 my-1"></div>
 
                     {/* Theme Switcher */}
-                    <div className="p-4">
+                    <div className="p-3">
                         <div className="bg-gray-50 dark:bg-gray-800/50 p-1.5 rounded-2xl flex items-center justify-between">
                             <button
                                 onClick={() => setIsDark(false)}
@@ -131,7 +131,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ isDark, setIsDark }) => {
                     <div className="border-t border-gray-100 dark:border-gray-800 my-1"></div>
 
                     {/* Profile Section */}
-                    <div className="p-5 flex items-center gap-4 bg-gray-50/50 dark:bg-gray-800/30">
+                    <div className="p-4 flex items-center gap-4 bg-gray-50/50 dark:bg-gray-800/30">
                         <div className="relative">
                             <img
                                 src="https://ui-avatars.com/api/?name=Admin&background=B8860B&color=fff"

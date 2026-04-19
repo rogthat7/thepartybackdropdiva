@@ -101,6 +101,7 @@ export const BackdropGallery: React.FC = () => {
                             </div>
                         </div>
 
+
                         {/* Admin Controls */}
                         {isAdmin && (
                             <div className="absolute top-4 right-4 flex gap-2">
