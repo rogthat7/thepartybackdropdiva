@@ -105,25 +105,41 @@ export const AdminLeads: React.FC = () => {
                     <div className="flex gap-4">
                         <button
                             onClick={() => setView('leads')}
-                            className={`px-6 py-2 rounded-2xl text-sm font-semibold transition-all ${view === 'leads' ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200'}`}
+                            className={`px-6 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 ${
+                                view === 'leads' 
+                                ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/40 scale-105' 
+                                : 'bg-gray-100 dark:bg-gray-800/50 text-gray-500 hover:bg-gold-500/10 hover:text-gold-500 hover:shadow-md'
+                            }`}
                         >
                             Leads
                         </button>
                         <button
                             onClick={() => setView('bookings')}
-                            className={`px-6 py-2 rounded-2xl text-sm font-semibold transition-all ${view === 'bookings' ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200'}`}
+                            className={`px-6 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 ${
+                                view === 'bookings' 
+                                ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/40 scale-105' 
+                                : 'bg-gray-100 dark:bg-gray-800/50 text-gray-500 hover:bg-gold-500/10 hover:text-gold-500 hover:shadow-md'
+                            }`}
                         >
                             Bookings
                         </button>
                         <button
                             onClick={() => setView('support')}
-                            className={`px-6 py-2 rounded-2xl text-sm font-semibold transition-all ${view === 'support' ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200'}`}
+                            className={`px-6 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 ${
+                                view === 'support' 
+                                ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/40 scale-105' 
+                                : 'bg-gray-100 dark:bg-gray-800/50 text-gray-500 hover:bg-gold-500/10 hover:text-gold-500 hover:shadow-md'
+                            }`}
                         >
                             Support Requests
                         </button>
                         <button
                             onClick={() => setView('assignments')}
-                            className={`px-6 py-2 rounded-2xl text-sm font-semibold transition-all ${view === 'assignments' ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/30' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200'}`}
+                            className={`px-6 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 ${
+                                view === 'assignments' 
+                                ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/40 scale-105' 
+                                : 'bg-gray-100 dark:bg-gray-800/50 text-gray-500 hover:bg-gold-500/10 hover:text-gold-500 hover:shadow-md'
+                            }`}
                         >
                             Assignments
                         </button>
@@ -148,8 +164,9 @@ export const AdminLeads: React.FC = () => {
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="bg-gold-500/5 dark:bg-gold-500/10 border-b border-gray-200 dark:border-gray-700">
-                                    <th className="px-6 py-4 text-xs font-bold uppercase text-gold-600 dark:text-gold-400 border-r border-gray-200 dark:border-gray-700">Date & Contact Info</th>
-                                    <th className="px-6 py-4 text-xs font-bold uppercase text-gold-600 dark:text-gold-400 border-r border-gray-200 dark:border-gray-700">Comments / Message</th>
+                                    <th className="px-6 py-4 text-xs font-bold uppercase text-gold-600 dark:text-gold-400 border-r border-gray-200 dark:border-gray-700">Contact Info</th>
+                                    <th className="px-6 py-4 text-xs font-bold uppercase text-gold-600 dark:text-gold-400 border-r border-gray-200 dark:border-gray-700">Event Details</th>
+                                    <th className="px-6 py-4 text-xs font-bold uppercase text-gold-600 dark:text-gold-400 border-r border-gray-200 dark:border-gray-700">Comments</th>
                                     <th className="px-6 py-4 text-xs font-bold uppercase text-gold-600 dark:text-gold-400 border-r border-gray-200 dark:border-gray-700">Assign Advisor</th>
                                     <th className="px-6 py-4 text-xs font-bold uppercase text-gold-600 dark:text-gold-400 border-r border-gray-200 dark:border-gray-700">Status</th>
                                     <th className="px-6 py-4 text-xs font-bold uppercase text-gold-600 dark:text-gold-400">Actions</th>
@@ -159,14 +176,49 @@ export const AdminLeads: React.FC = () => {
                                 {leads.map(lead => (
                                     <tr key={lead.id} className="hover:bg-gold-50/30 dark:hover:bg-gold-900/10 transition-colors group">
                                         <td className="px-6 py-4 border-r border-gray-200 dark:border-gray-700">
-                                            <div className="flex flex-col">
-                                                <span className="text-[10px] font-bold text-gold-500 mb-1 tracking-wider uppercase">{new Date(lead.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                                                <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{lead.email || 'No Email'}</span>
-                                                <span className="text-xs text-gray-500 font-mono mt-1">{lead.phone || 'No Phone'}</span>
+                                            <div className="flex flex-col gap-0.5">
+                                                <span className="text-[10px] font-bold text-gold-500 tracking-wider uppercase">{new Date(lead.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                                                {lead.name && <span className="text-sm font-bold text-gray-800 dark:text-gray-100">{lead.name}</span>}
+                                                <span className="text-xs text-gray-600 dark:text-gray-300">{lead.email || <span className="italic opacity-40">No email</span>}</span>
+                                                <span className="text-xs text-gray-500 font-mono">{lead.phone || <span className="italic opacity-40">No phone</span>}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 border-r border-gray-200 dark:border-gray-700">
+                                            <div className="flex flex-col gap-1.5 min-w-[160px]">
+                                                {lead.eventType && (
+                                                    <div className="flex items-center gap-1.5">
+                                                        <span className="text-[10px] font-bold text-gold-500 uppercase tracking-wider w-12 shrink-0">Type</span>
+                                                        <span className="text-xs font-semibold text-gray-700 dark:text-gray-200 bg-gold-500/10 px-2 py-0.5 rounded-lg">{lead.eventType}</span>
+                                                    </div>
+                                                )}
+                                                {lead.eventDate && (
+                                                    <div className="flex items-center gap-1.5">
+                                                        <span className="text-[10px] font-bold text-gold-500 uppercase tracking-wider w-12 shrink-0">Date</span>
+                                                        <span className="text-xs text-gray-600 dark:text-gray-300">{new Date(lead.eventDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                                                    </div>
+                                                )}
+                                                {lead.guestCount && (
+                                                    <div className="flex items-center gap-1.5">
+                                                        <span className="text-[10px] font-bold text-gold-500 uppercase tracking-wider w-12 shrink-0">Guests</span>
+                                                        <span className="text-xs text-gray-600 dark:text-gray-300">{lead.guestCount}</span>
+                                                    </div>
+                                                )}
+                                                {lead.venueLocation && (
+                                                    <div className="flex items-center gap-1.5">
+                                                        <span className="text-[10px] font-bold text-gold-500 uppercase tracking-wider w-12 shrink-0">Venue</span>
+                                                        <span className="text-xs text-gray-600 dark:text-gray-300 truncate max-w-[120px]">{lead.venueLocation}</span>
+                                                    </div>
+                                                )}
+                                                {lead.servicesInterested && (
+                                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gold-500 text-white self-start mt-0.5">{lead.servicesInterested}</span>
+                                                )}
+                                                {!lead.eventType && !lead.eventDate && !lead.guestCount && !lead.venueLocation && !lead.servicesInterested && (
+                                                    <span className="text-xs italic text-gray-300 dark:text-gray-600">No event details</span>
+                                                )}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400 italic border-r border-gray-200 dark:border-gray-700 bg-gray-50/30 dark:bg-gray-800/20">
-                                            {lead.comments || <span className="text-gray-300 dark:text-gray-600">No message provided</span>}
+                                            {lead.comments || <span className="text-gray-300 dark:text-gray-600">—</span>}
                                         </td>
                                         <td className="px-6 py-4 border-r border-gray-200 dark:border-gray-700">
                                             <select 

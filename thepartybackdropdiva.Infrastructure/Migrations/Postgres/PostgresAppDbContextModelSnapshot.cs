@@ -453,7 +453,22 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.Postgres
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("EventDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("EventType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GuestCount")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
                     b.Property<string>("Phone")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ServicesInterested")
                         .HasColumnType("text");
 
                     b.Property<string>("Status")
@@ -462,6 +477,9 @@ namespace thepartybackdropdiva.Infrastructure.Migrations.Postgres
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("VenueLocation")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

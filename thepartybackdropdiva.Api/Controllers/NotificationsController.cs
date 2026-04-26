@@ -8,9 +8,15 @@ namespace thepartybackdropdiva.Api.Controllers;
 
 public class ConsultationRequestDto
 {
+    public string? Name { get; set; }
     public string? Email { get; set; }
     public string? Phone { get; set; }
     public string? Comments { get; set; }
+    public string? EventType { get; set; }
+    public DateTime? EventDate { get; set; }
+    public string? GuestCount { get; set; }
+    public string? VenueLocation { get; set; }
+    public string? ServicesInterested { get; set; }
 }
 
 public class SupportEmailDto
@@ -36,18 +42,18 @@ public class NotificationsController : ControllerBase
     [HttpPost("consultation")]
     public async Task<IActionResult> RequestConsultation([FromBody] ConsultationRequestDto request)
     {
-
-        if (string.IsNullOrWhiteSpace(request.Email) && string.IsNullOrWhiteSpace(request.Phone))
-        {
-            return BadRequest("Must provide at least an email or phone number.");
-        }
-
         // Save entry to database
         var consultation = new ConsultationRequest
         {
+            Name = request.Name,
             Email = request.Email,
             Phone = request.Phone,
             Comments = request.Comments,
+            EventType = request.EventType,
+            EventDate = request.EventDate?.ToUniversalTime(),
+            GuestCount = request.GuestCount,
+            VenueLocation = request.VenueLocation,
+            ServicesInterested = request.ServicesInterested,
             Status = "Pending"
         };
 

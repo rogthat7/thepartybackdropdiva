@@ -1,26 +1,25 @@
 export interface ConsultationRequest {
+  name?: string;
   email?: string;
   phone?: string;
   comments?: string;
+  eventType?: string;
+  eventDate?: string;
+  guestCount?: string;
+  venueLocation?: string;
+  servicesInterested?: string;
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5148';
 
 export const submitConsultation = async (request: ConsultationRequest): Promise<void> => {
-  const { email, phone } = request;
-  
-  if (!email && !phone) {
-    console.log(`[Notification Service] No contact info provided, ignoring.`);
-    return;
-  }
-
   try {
     const response = await fetch(`${API_BASE_URL}/api/notifications/consultation`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, phone, comments: request.comments })
+      body: JSON.stringify(request)
     });
 
     if (!response.ok) {

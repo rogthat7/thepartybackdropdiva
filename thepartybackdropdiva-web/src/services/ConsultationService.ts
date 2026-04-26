@@ -2,11 +2,17 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5148';
 
 export interface AdminConsultationRequest {
   id: string;
+  name?: string;
   email?: string;
   phone?: string;
   comments?: string;
   status: string;
   createdAt: string;
+  eventType?: string;
+  eventDate?: string;
+  guestCount?: string;
+  venueLocation?: string;
+  servicesInterested?: string;
 }
 
 export const getAllConsultations = async (): Promise<AdminConsultationRequest[]> => {

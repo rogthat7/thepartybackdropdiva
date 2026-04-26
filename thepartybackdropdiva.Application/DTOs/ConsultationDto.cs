@@ -3,12 +3,20 @@ namespace thepartybackdropdiva.Application.DTOs;
 public class ConsultationDto
 {
     public Guid Id { get; set; }
+    public string? Name { get; set; }
     public string? Email { get; set; }
     public string? Phone { get; set; }
     public string? Comments { get; set; }
     public string Status { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public string? AssignedAdvisorName { get; set; }
+
+    // Event context fields
+    public string? EventType { get; set; }
+    public DateTime? EventDate { get; set; }
+    public string? GuestCount { get; set; }
+    public string? VenueLocation { get; set; }
+    public string? ServicesInterested { get; set; }
 }
 
 public class AdvisorDto
