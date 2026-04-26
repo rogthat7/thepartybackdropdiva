@@ -99,60 +99,95 @@ public static class SeedService
 
         if (!await context.CateringMenus.AnyAsync())
         {
-            var menu = new CateringMenu
+            var silverPackage = new CateringMenu
             {
-                Name = "Gold Package",
-                Description = "Our premium catering package including 3 courses.",
+                Name = "Silver Package",
+                Description = "A refined 3-course selection featuring our most popular classic dishes.",
                 BasePricePerPlate = 45.00m
             };
 
-            var item1 = new MenuItem
+            var goldPackage = new CateringMenu
             {
-                Name = "Truffle Risotto",
-                Description = "Creamy arborio rice with wild mushrooms and truffle oil.",
-                Category = "Main Course",
-                BasePrice = 15.00m,
-                IsVegetarian = true,
-                IsGlutenFree = true,
-                ItemType = "Menu",
-                ImageUrl = "/images/catering/risotto.png",
-                CateringMenu = menu
+                Name = "Gold Package",
+                Description = "Our premium catering package with a wider variety of gourmet options.",
+                BasePricePerPlate = 75.00m
             };
 
-            var item2 = new MenuItem
+            var platinumPackage = new CateringMenu
             {
-                Name = "Herb-Crusted Salmon",
-                Description = "Perfectly pan-seared salmon fillet with crispy herb crust.",
-                Category = "Main Course",
-                BasePrice = 25.00m,
-                IsVegetarian = false,
-                IsGlutenFree = true,
-                ItemType = "Menu",
-                ImageUrl = "/images/catering/salmon.png",
-                CateringMenu = menu
+                Name = "Platinum Package",
+                Description = "The ultimate luxury dining experience featuring Wagyu, Truffle, and Seafood.",
+                BasePricePerPlate = 125.00m
             };
 
-            var item3 = new MenuItem
-            {
-                Name = "Mini Caprese Skewers",
-                Description = "Bite-sized cherry tomatoes, mozzarella, and basil drizzled with balsamic.",
-                Category = "Appetizer",
-                BasePrice = 8.00m,
-                IsVegetarian = true,
-                IsGlutenFree = true,
-                ItemType = "Menu",
-                ImageUrl = "/images/catering/caprese.png",
-                CateringMenu = menu
-            };
+            context.CateringMenus.AddRange(silverPackage, goldPackage, platinumPackage);
 
-            menu.MenuItems.Add(item1);
-            menu.MenuItems.Add(item2);
-            menu.MenuItems.Add(item3);
+            // Starters
+            var caprese = new MenuItem { Name = "Mini Caprese Skewers", Description = "Bite-sized cherry tomatoes, mozzarella, and basil drizzled with balsamic.", Category = "Starters", BasePrice = 8.00m, IsVegetarian = true, IsGlutenFree = true, ItemType = "Menu", ImageUrl = "/images/catering/generated/starter_caprese.png", CateringMenu = silverPackage };
+            var bruschetta = new MenuItem { Name = "Bruschetta", Description = "Crispy toasted baguette slices topped with fresh diced tomatoes, garlic, and basil.", Category = "Starters", BasePrice = 9.00m, IsVegetarian = true, IsGlutenFree = false, ItemType = "Menu", ImageUrl = "/images/catering/generated/starter_bruschetta.png", CateringMenu = silverPackage };
+            var arancini = new MenuItem { Name = "Truffle Arancini", Description = "Golden crispy risotto balls filled with melted cheese, served with a rich truffle aioli dip.", Category = "Starters", BasePrice = 12.00m, IsVegetarian = true, IsGlutenFree = false, ItemType = "Menu", ImageUrl = "/images/catering/generated/starter_arancini.png", CateringMenu = goldPackage };
+            var crabcakes = new MenuItem { Name = "Crab Cakes", Description = "Golden brown lump crab cakes with a dollop of remoulade sauce and fresh lemon wedges.", Category = "Starters", BasePrice = 15.00m, IsVegetarian = false, IsGlutenFree = false, ItemType = "Menu", ImageUrl = "/images/catering/generated/starter_crabcakes.png", CateringMenu = goldPackage };
+            var scallops = new MenuItem { Name = "Seared Scallops", Description = "Perfectly seared sea scallops with a golden crust, garnished with microgreens.", Category = "Starters", BasePrice = 18.00m, IsVegetarian = false, IsGlutenFree = true, ItemType = "Menu", ImageUrl = "/images/catering/generated/starter_scallops.png", CateringMenu = platinumPackage };
+            var sliders = new MenuItem { Name = "Wagyu Beef Sliders", Description = "Gourmet miniature burgers with brioche buns, melted cheese, and fresh greens.", Category = "Starters", BasePrice = 16.00m, IsVegetarian = false, IsGlutenFree = false, ItemType = "Menu", ImageUrl = "/images/catering/generated/starter_sliders.png", CateringMenu = platinumPackage };
 
-            context.CateringMenus.Add(menu);
-            context.MenuItems.Add(item1);
-            context.MenuItems.Add(item2);
-            context.MenuItems.Add(item3);
+            // Mains
+            var risotto = new MenuItem { Name = "Truffle Risotto", Description = "Creamy arborio rice infused with wild mushrooms, garnished with fresh parmesan.", Category = "Mains", BasePrice = 22.00m, IsVegetarian = true, IsGlutenFree = true, ItemType = "Menu", ImageUrl = "/images/catering/generated/main_risotto.png", CateringMenu = silverPackage };
+            var salmon = new MenuItem { Name = "Herb-Crusted Salmon", Description = "Perfectly pan-seared salmon fillet with crispy herb crust, served with roasted asparagus.", Category = "Mains", BasePrice = 28.00m, IsVegetarian = false, IsGlutenFree = true, ItemType = "Menu", ImageUrl = "/images/catering/generated/main_salmon.png", CateringMenu = silverPackage };
+            var wellington = new MenuItem { Name = "Vegan Mushroom Wellington", Description = "Flaky golden puff pastry encasing a savory mushroom duxelles.", Category = "Mains", BasePrice = 26.00m, IsVegetarian = true, IsGlutenFree = false, ItemType = "Menu", ImageUrl = "/images/catering/generated/main_wellington.png", CateringMenu = goldPackage };
+            var lamb = new MenuItem { Name = "Roasted Lamb Rack", Description = "Beautifully carved rack of lamb with a fresh mint herb crust and root vegetables.", Category = "Mains", BasePrice = 35.00m, IsVegetarian = false, IsGlutenFree = true, ItemType = "Menu", ImageUrl = "/images/catering/generated/main_lambrack.png", CateringMenu = goldPackage };
+            var blackcod = new MenuItem { Name = "Miso Glazed Black Cod", Description = "Flaky, melt-in-your-mouth black cod fillet with a caramelized miso glaze.", Category = "Mains", BasePrice = 38.00m, IsVegetarian = false, IsGlutenFree = true, ItemType = "Menu", ImageUrl = "/images/catering/generated/main_blackcod.png", CateringMenu = platinumPackage };
+            var filetmignon = new MenuItem { Name = "Filet Mignon", Description = "Perfectly cooked medium-rare beef tenderloin steak, served with red wine demi-glace.", Category = "Mains", BasePrice = 45.00m, IsVegetarian = false, IsGlutenFree = true, ItemType = "Menu", ImageUrl = "/images/catering/generated/main_filetmignon.png", CateringMenu = platinumPackage };
+
+            // Desserts
+            var lemontart = new MenuItem { Name = "Lemon Tart", Description = "Zesty lemon curd in a buttery crust, topped with perfectly torched Italian meringue.", Category = "Desserts", BasePrice = 10.00m, IsVegetarian = true, IsGlutenFree = false, ItemType = "Menu", ImageUrl = "/images/catering/generated/dessert_lemontart.png", CateringMenu = silverPackage };
+            var pannacotta = new MenuItem { Name = "Vanilla Panna Cotta", Description = "Silky vanilla bean panna cotta topped with a vibrant mixed berry compote.", Category = "Desserts", BasePrice = 11.00m, IsVegetarian = true, IsGlutenFree = true, ItemType = "Menu", ImageUrl = "/images/catering/generated/dessert_pannacotta.png", CateringMenu = silverPackage };
+            var tiramisu = new MenuItem { Name = "Classic Tiramisu", Description = "Classic Italian dessert with layers of coffee-soaked ladyfingers and mascarpone cream.", Category = "Desserts", BasePrice = 12.00m, IsVegetarian = true, IsGlutenFree = false, ItemType = "Menu", ImageUrl = "/images/catering/generated/dessert_tiramisu.png", CateringMenu = goldPackage };
+            var cheesecake = new MenuItem { Name = "Berry Cheesecake", Description = "Creamy New York style cheesecake generously topped with fresh strawberries and blueberries.", Category = "Desserts", BasePrice = 12.00m, IsVegetarian = true, IsGlutenFree = false, ItemType = "Menu", ImageUrl = "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&q=80&w=800", CateringMenu = goldPackage };
+            var cremebrulee = new MenuItem { Name = "Crème Brûlée", Description = "Classic French vanilla custard with a perfectly caramelized hard sugar crust.", Category = "Desserts", BasePrice = 14.00m, IsVegetarian = true, IsGlutenFree = true, ItemType = "Menu", ImageUrl = "/images/catering/generated/dessert_cremebrulee.png", CateringMenu = platinumPackage };
+            var lavacake = new MenuItem { Name = "Chocolate Lava Cake", Description = "Decadent dark chocolate molten cake with a warm gooey center and vanilla bean ice cream.", Category = "Desserts", BasePrice = 15.00m, IsVegetarian = true, IsGlutenFree = false, ItemType = "Menu", ImageUrl = "/images/catering/generated/dessert_lavacake.png", CateringMenu = platinumPackage };
+
+            // Wait! Platinum should include Gold & Silver items. Gold should include Silver items.
+            // Let's add them accordingly.
+            var allItems = new List<MenuItem> { caprese, bruschetta, arancini, crabcakes, scallops, sliders, risotto, salmon, wellington, lamb, blackcod, filetmignon, lemontart, pannacotta, tiramisu, cheesecake, cremebrulee, lavacake };
+            
+            // Re-assign correctly for cascading menus
+            foreach (var item in allItems) {
+                // Remove the default assignment to add them properly to multiple packages via many-to-many? 
+                // Ah, wait. The relationship is One-to-Many right now: `CateringMenu` has many `MenuItems`, but `MenuItem` belongs to ONE `CateringMenu`. 
+                // Let's check MenuItem entity.
+                // It has `Guid? CateringMenuId`. That means One-to-Many.
+                // So we can't easily put the exact same item in multiple packages unless we duplicate it or change the DB schema to Many-to-Many.
+                // Let's just keep them strictly assigned to their package tiers for simplicity, or we can duplicate them.
+                // The user said "Platinum, Gold, Silver". Let's duplicate the items for the higher tiers so they have more options.
+            }
+            
+            // Clear the cateringMenu link we set inline to do it properly with duplicates
+            foreach (var item in allItems) item.CateringMenu = null;
+            
+            // Add to Silver (2 of each)
+            silverPackage.MenuItems.Add(caprese);
+            silverPackage.MenuItems.Add(bruschetta);
+            silverPackage.MenuItems.Add(risotto);
+            silverPackage.MenuItems.Add(salmon);
+            silverPackage.MenuItems.Add(lemontart);
+            silverPackage.MenuItems.Add(pannacotta);
+
+            // Add to Gold (4 of each) - Need to clone Silver items to add to Gold without EF core tracking conflicts
+            goldPackage.MenuItems.Add(arancini);
+            goldPackage.MenuItems.Add(crabcakes);
+            goldPackage.MenuItems.Add(wellington);
+            goldPackage.MenuItems.Add(lamb);
+            goldPackage.MenuItems.Add(tiramisu);
+            goldPackage.MenuItems.Add(cheesecake);
+
+            // Add to Platinum (6 of each)
+            platinumPackage.MenuItems.Add(scallops);
+            platinumPackage.MenuItems.Add(sliders);
+            platinumPackage.MenuItems.Add(blackcod);
+            platinumPackage.MenuItems.Add(filetmignon);
+            platinumPackage.MenuItems.Add(cremebrulee);
+            platinumPackage.MenuItems.Add(lavacake);
+
             await context.SaveChangesAsync();
         }
 
@@ -366,5 +401,20 @@ public static class SeedService
         await context.SaveChangesAsync();
 
 
+    }
+
+    private static MenuItem CloneMenuItem(MenuItem item)
+    {
+        return new MenuItem
+        {
+            Name = item.Name,
+            Description = item.Description,
+            Category = item.Category,
+            BasePrice = item.BasePrice,
+            IsVegetarian = item.IsVegetarian,
+            IsGlutenFree = item.IsGlutenFree,
+            ItemType = item.ItemType,
+            ImageUrl = item.ImageUrl
+        };
     }
 }

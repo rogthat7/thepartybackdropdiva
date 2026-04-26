@@ -28,6 +28,7 @@ export interface MenuItemDto {
     category: string;
     isVegetarian: boolean;
     isGlutenFree: boolean;
+    imageUrl?: string;
 }
 
 export interface CateringMenuDto {
@@ -67,6 +68,16 @@ export const fetchBackdropCollections = async () => {
 
 export const fetchMenus = async () => {
     const res = await apiClient.get<CateringMenuDto[]>('/Catalog/menus');
+    return res.data;
+};
+
+export const createCustomMenu = async (name: string, menuItemIds: string[]) => {
+    // Determine token for user assignment
+    const token = localStorage.getItem('auth_token');
+    const headers: any = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    
+    const res = await apiClient.post<CateringMenuDto>('/Catalog/menus/custom', { name, menuItemIds }, { headers });
     return res.data;
 };
 

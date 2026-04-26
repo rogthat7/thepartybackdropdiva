@@ -9,4 +9,5 @@ public class MenuItemDto
     public string Category { get; set; } = string.Empty;
     public bool IsVegetarian { get; set; }
     public bool IsGlutenFree { get; set; }
+    public string? ImageUrl { get; set; }
 }
