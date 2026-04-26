@@ -259,25 +259,108 @@ public static class SeedService
             }
         }
 
-        // Add other collections as placeholders if they don't exist
-        if (!await context.BackdropCollections.AnyAsync(c => c.Name == "Rustic Wooden Arch"))
+        // Seeding Rustic Wooden Arch Collection
+        var rusticArch = await context.BackdropCollections
+            .Include(c => c.Images)
+            .FirstOrDefaultAsync(c => c.Name == "Rustic Wooden Arch");
+
+        if (rusticArch == null)
         {
-            context.BackdropCollections.Add(new BackdropCollection
+            rusticArch = new BackdropCollection
             {
                 Name = "Rustic Wooden Arch",
                 Description = "Handcrafted wooden geometries decorated with various botanicals.",
-                CoverImageUrl = "https://images.unsplash.com/photo-1510076857177-7470076d4098?auto=format&fit=crop&q=80&w=800"
-            });
+                CoverImageUrl = "/images/rustic_wooden_arch_1.png"
+            };
+            context.BackdropCollections.Add(rusticArch);
+            await context.SaveChangesAsync();
+        }
+        else
+        {
+            rusticArch.CoverImageUrl = "/images/rustic_wooden_arch_1.png";
         }
 
-        if (!await context.BackdropCollections.AnyAsync(c => c.Name == "Neon Glamour"))
+        var rusticImages = new List<(string Title, string ImageUrl, string[]? Additional)>
         {
-            context.BackdropCollections.Add(new BackdropCollection
+            ("Elegant Greenery Arch", "/images/rustic_wooden_arch_1.png", null),
+            ("Fairy Light Romance", "/images/rustic_wooden_arch_2.png", null),
+            ("Golden Hour Barn Wood", "/images/rustic_wooden_arch_3.png", null),
+            ("Blush Rose Geometry", "/images/rustic_wooden_arch_4.png", null),
+            ("Birch Wood Chiffon", "/images/rustic_wooden_arch_5.png", null),
+            ("Bohemian Macrame", "/images/rustic_wooden_arch_6.png", null)
+        };
+
+        foreach (var t in rusticImages)
+        {
+            var existingImg = rusticArch.Images?.FirstOrDefault(i => i.Title == t.Title);
+            if (existingImg == null)
+            {
+                context.BackdropImages.Add(new BackdropImage 
+                { 
+                    Title = t.Title, 
+                    ImageUrl = t.ImageUrl, 
+                    AdditionalImageUrls = t.Additional, 
+                    Collection = rusticArch 
+                });
+            }
+            else
+            {
+                existingImg.ImageUrl = t.ImageUrl;
+                existingImg.AdditionalImageUrls = t.Additional;
+            }
+        }
+
+        // Seeding Neon Glamour Collection
+        var neonGlamour = await context.BackdropCollections
+            .Include(c => c.Images)
+            .FirstOrDefaultAsync(c => c.Name == "Neon Glamour");
+
+        if (neonGlamour == null)
+        {
+            neonGlamour = new BackdropCollection
             {
                 Name = "Neon Glamour",
-                Description = "High-energy sequin walls and vibrant neon statements.",
-                CoverImageUrl = "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=800"
-            });
+                Description = "High-energy sequin walls and vibrant neon statements covering all major social events.",
+                CoverImageUrl = "/images/neon_glamour_1.png"
+            };
+            context.BackdropCollections.Add(neonGlamour);
+            await context.SaveChangesAsync();
+        }
+        else
+        {
+            neonGlamour.CoverImageUrl = "/images/neon_glamour_1.png";
+        }
+
+        var neonImages = new List<(string Title, string ImageUrl, string[]? Additional)>
+        {
+            ("Modern Luxury Wedding 'Better Together'", "/images/neon_glamour_1.png", null),
+            ("21st Birthday 'Happy Birthday' Pink", "/images/neon_glamour_2.png", null),
+            ("Corporate Gala Geometric", "/images/neon_glamour_3.png", null),
+            ("Bridal Shower 'Bride to Be'", "/images/neon_glamour_4.png", null),
+            ("Anniversary Celebration 'Cheers'", "/images/neon_glamour_5.png", null),
+            ("Baby Shower 'Oh Baby'", "/images/neon_glamour_6.png", null),
+            ("New Year's Eve 'Let's Party'", "/images/neon_glamour_7.png", null),
+            ("Prom Night 'Night to Remember'", "/images/neon_glamour_8.png", null)
+        };
+
+        foreach (var t in neonImages)
+        {
+            var existingImg = neonGlamour.Images?.FirstOrDefault(i => i.Title == t.Title);
+            if (existingImg == null)
+            {
+                context.BackdropImages.Add(new BackdropImage 
+                { 
+                    Title = t.Title, 
+                    ImageUrl = t.ImageUrl, 
+                    AdditionalImageUrls = t.Additional, 
+                    Collection = neonGlamour 
+                });
+            }
+            else
+            {
+                existingImg.ImageUrl = t.ImageUrl;
+                existingImg.AdditionalImageUrls = t.Additional;
+            }
         }
 
         await context.SaveChangesAsync();
