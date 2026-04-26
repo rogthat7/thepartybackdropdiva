@@ -85,7 +85,7 @@ export const Home: React.FC = () => {
 
       {/* Main Content Areas */}
       <main className="relative z-10">
-        {activeTab === 'gallery' && <BackdropGallery />}
+        {activeTab === 'gallery' && <BackdropGallery isDark={isDark} />}
         {activeTab === 'catering' && <CateringMenuSelector />}
         {activeTab === 'support_requests' && <SupportRequests isDark={isDark} />}
         {activeTab === 'assigned_consultations' && <AdvisorAssignedConsultations isDark={isDark} />}
