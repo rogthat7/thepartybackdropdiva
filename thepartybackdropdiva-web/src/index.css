@@ -6,6 +6,12 @@
   FIX: Bootstrap global resets often conflict with Tailwind's utility classes.
   We explicitly restore transparency and layout for our navigation buttons.
 */
+.dark .bg-white,
+.dark .bg-light,
+.dark .bg-body {
+    background-color: transparent !important;
+}
+
 button {
     border: none;
     box-shadow: none;
@@ -117,5 +123,63 @@ html::-webkit-scrollbar {
 .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+}
+
+@keyframes border-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.platinum-rgb-border {
+    position: relative;
+    overflow: hidden !important;
+    border: none !important; /* Hide standard border to show the RGB one */
+}
+
+.platinum-rgb-border::before {
+    content: '';
+    position: absolute;
+    width: 300%;
+    height: 300%;
+    top: -100%;
+    left: -100%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        #ff0000 20deg,
+        #ff7300 40deg,
+        #fffb00 60deg,
+        #48ff00 80deg,
+        #00ffd5 100deg,
+        #002bff 120deg,
+        #7a00ff 140deg,
+        #ff00c8 160deg,
+        transparent 180deg,
+        transparent 360deg
+    );
+    animation: border-rotate 4s linear infinite;
+    z-index: 0;
+}
+
+/* Mask to create the "border" effect */
+.platinum-rgb-border::after {
+    content: '';
+    position: absolute;
+    inset: 3px; /* Border thickness */
+    background: inherit;
+    border-radius: inherit;
+    z-index: 1;
+}
+
+/* Ensure button content is visible above the RGB effect */
+.platinum-rgb-border h3,
+.platinum-rgb-border p {
+    position: relative;
+    z-index: 20;
+}
+
+@keyframes shiny-sweep {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }
 

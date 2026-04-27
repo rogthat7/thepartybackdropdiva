@@ -100,7 +100,7 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
     return (
         <section className="p-8 max-w-7xl mx-auto min-h-screen">
             <div className="text-center mb-16">
-                <h2 className="text-5xl font-extralight text-gray-900 dark:text-gray-100 tracking-tighter mb-4">Curated Portfolio</h2>
+                <h2 className={`text-5xl font-extralight tracking-tighter mb-4 ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>Curated Portfolio</h2>
                 <p className="text-gray-500 dark:text-gray-400 font-light max-w-2xl mx-auto">Explore our exclusive series of high-resolution backdrops, crafted for the most discerning eyes.</p>
                 <div className="w-16 h-0.5 bg-gold-500 mx-auto mt-8 opacity-50"></div>
 
@@ -187,7 +187,7 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
                                         <span className="w-12 h-px bg-gold-500"></span>
                                         <span className="text-gold-500 text-xs font-bold uppercase tracking-[0.5em]">{selectedCollection.name}</span>
                                     </div>
-                                    <h2 className="text-4xl md:text-6xl font-black text-gray-900 dark:text-gray-100 tracking-tighter mb-8 whitespace-nowrap z-0">
+                                    <h2 className={`text-4xl md:text-6xl font-black tracking-tighter mb-8 whitespace-nowrap z-0 ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>
                                         THE <span className="font-thin italic text-gold-500 mx-2">COMPLETE</span> SERIES
                                     </h2>
                                     <p className="text-gray-500 dark:text-gray-400 font-light text-lg leading-relaxed max-w-lg mb-12">
@@ -292,7 +292,7 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
 
                                         <div className="w-full md:w-1/3 flex flex-col items-start text-left space-y-6">
                                             <span className="text-xs font-black text-gold-500 uppercase tracking-widest">Variation 0{index + 1}</span>
-                                            <h4 className="text-5xl font-extralight text-gray-900 dark:text-gray-100 tracking-tighter">{img.title}</h4>
+                                            <h4 className={`text-5xl font-extralight tracking-tighter ${isDark ? 'text-white' : 'text-gray-900'}`}>{img.title}</h4>
                                             <div className="w-16 h-px bg-gray-300 dark:bg-gray-700"></div>
                                             <p className="text-gray-500 dark:text-gray-400 font-light leading-relaxed">
                                                 A sophisticated interpretation of the {selectedCollection.name} aesthetic,

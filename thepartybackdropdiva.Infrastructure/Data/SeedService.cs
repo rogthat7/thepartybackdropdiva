@@ -271,7 +271,7 @@ public static class SeedService
                 "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?auto=format&fit=crop&q=80&w=1200"
             }),
             ("Midnight Garden Wisteria", "/images/backdrops/generated/midnight_wisteria.png", null),
-            ("Springtime Tulip Burst", "https://images.unsplash.com/photo-1520302830754-8d1a10389382?auto=format&fit=crop&q=80&w=1200", null)
+            ("Springtime Tulip Burst", "/images/backdrops/generated/springtime_tulip_burst.png", null)
         };
 
         foreach (var t in targetImages)

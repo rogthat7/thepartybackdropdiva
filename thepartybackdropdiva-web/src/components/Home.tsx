@@ -124,7 +124,7 @@ export const Home: React.FC = () => {
         {/* Hero - Only visible on Home tab */}
         {activeTab === 'home' && (
           <section className="relative z-10 py-24 text-center px-4">
-        <h2 className="text-5xl md:text-6xl font-light mb-6">Elevate Your Next Event</h2>
+        <h2 className="text-5xl md:text-6xl font-light mb-6 text-gray-900 dark:text-gray-100">Elevate Your Next Event</h2>
         <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-10">Luxury backdrops and premium catering services designed to create unforgettable experiences.</p>
         <button 
           onClick={() => setIsModalOpen(true)}

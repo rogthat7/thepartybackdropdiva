@@ -9,11 +9,13 @@ import { NotFound } from './components/NotFound';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
+        <Toaster position="top-center" reverseOrder={false} />
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
