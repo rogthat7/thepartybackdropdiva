@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { submitConsultation } from '../services/NotificationService';
 
 interface ConsultationModalProps {
@@ -22,6 +22,22 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
   const [venueLocation, setVenueLocation] = useState('');
   const [servicesInterested, setServicesInterested] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -66,8 +82,12 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
   const labelBase = 'block text-xs font-semibold uppercase tracking-widest mb-1.5 opacity-70';
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
+    <div 
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto"
+      onClick={onClose}
+    >
       <div
+        onClick={(e) => e.stopPropagation()}
         className={`relative w-full max-w-2xl my-auto rounded-3xl shadow-2xl transition-colors duration-300 overflow-hidden ${
           isDark
             ? 'bg-gray-800 text-gray-100 border border-gray-700/80'
