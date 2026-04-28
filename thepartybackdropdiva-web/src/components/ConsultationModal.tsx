@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { submitConsultation } from '../services/NotificationService';
+import { useJsApiLoader } from '@react-google-maps/api';
+
+const GMP_AUTOCOMPLETE = 'gmp-place-autocomplete' as any;
 
 interface ConsultationModalProps {
   isOpen: boolean;
@@ -10,6 +13,7 @@ interface ConsultationModalProps {
 const EVENT_TYPES = ['Wedding', 'Birthday', 'Baby Shower', 'Corporate', 'Anniversary', 'Graduation', 'Other'];
 const GUEST_COUNTS = ['Under 50', '50 – 100', '100 – 200', '200 – 500', '500+'];
 const SERVICES = ['Backdrops', 'Catering', 'Both'];
+const LIBRARIES: ("places" | "drawing" | "geometry" | "visualization")[] = ["places"];
 
 export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, onClose, isDark }) => {
   const [name, setName] = useState('');
@@ -22,6 +26,43 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
   const [venueLocation, setVenueLocation] = useState('');
   const [servicesInterested, setServicesInterested] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const autocompleteRef = useRef<any>(null);
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+    libraries: LIBRARIES,
+    version: 'beta'
+  });
+
+  useEffect(() => {
+    const initPlaces = async () => {
+      if (isLoaded && window.google) {
+        try {
+          await window.google.maps.importLibrary("places");
+        } catch (error) {
+          console.error("Error loading Google Maps Places library:", error);
+        }
+      }
+    };
+    initPlaces();
+
+    if (isLoaded && autocompleteRef.current) {
+      const handlePlaceSelect = (e: any) => {
+        const place = e.detail.place;
+        if (place) {
+          const location = place.formattedAddress || place.displayName || '';
+          setVenueLocation(location);
+        }
+      };
+
+      const element = autocompleteRef.current;
+      element.addEventListener('gmp-placeselect', handlePlaceSelect);
+      return () => {
+        element.removeEventListener('gmp-placeselect', handlePlaceSelect);
+      };
+    }
+  }, [isLoaded]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -183,14 +224,32 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
               {/* Row 3: Venue */}
               <div>
                 <label className={labelBase}>Venue / Location</label>
-                <input
-                  type="text"
-                  value={venueLocation}
-                  onChange={e => setVenueLocation(e.target.value)}
-                  placeholder="e.g. Manhattan, NY or The Grand Ballroom"
-                  className={inputBase}
-                  disabled={status === 'loading'}
-                />
+                {isLoaded ? (
+                  <div className="relative">
+                    <GMP_AUTOCOMPLETE
+                      ref={autocompleteRef}
+                      placeholder="e.g. Manhattan, NY or The Grand Ballroom"
+                      class={inputBase}
+                      style={{ 
+                        border: 'none',
+                        padding: 0,
+                        display: 'block',
+                        background: 'transparent'
+                      }}
+                    ></GMP_AUTOCOMPLETE>
+                    {/* Synchronize the web component with our state if it's empty but state isn't (for resets) */}
+                    <input type="hidden" value={venueLocation} />
+                  </div>
+                ) : (
+                  <input
+                    type="text"
+                    value={venueLocation}
+                    onChange={e => setVenueLocation(e.target.value)}
+                    placeholder="e.g. Manhattan, NY or The Grand Ballroom"
+                    className={inputBase}
+                    disabled={status === 'loading'}
+                  />
+                )}
               </div>
 
               {/* Services Interested In */}
