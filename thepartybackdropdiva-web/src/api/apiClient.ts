@@ -194,3 +194,14 @@ export const addBookingFollowUp = async (bookingId: string, note: string) => {
     });
     if (!res.ok) throw new Error('Failed to add follow-up');
 };
+
+export const uploadFile = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await apiClient.post<{ url: string }>('/Upload', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+    return res.data.url;
+};

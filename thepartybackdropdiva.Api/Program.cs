@@ -101,6 +101,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ICateringService, CateringService>();
 builder.Services.AddScoped<IBackdropService, BackdropService>();
 builder.Services.AddScoped<IBackdropCollectionService, BackdropCollectionService>();
+builder.Services.AddScoped<thepartybackdropdiva.Domain.Interfaces.IStorageService, thepartybackdropdiva.Infrastructure.Storage.BlobStorageService>();
 builder.Services.AddScoped<thepartybackdropdiva.Communication.Interfaces.ICommunicationService, thepartybackdropdiva.Communication.Services.CommunicationService>();
 
 builder.Services.AddControllers();

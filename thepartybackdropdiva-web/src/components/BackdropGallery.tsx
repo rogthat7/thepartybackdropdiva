@@ -10,7 +10,8 @@ import {
     deleteBackdropCollection,
     addBackdropImage,
     updateBackdropImage,
-    deleteBackdropImage
+    deleteBackdropImage,
+    uploadFile
 } from '../api/apiClient';
 import { useAuth } from '../context/AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -163,6 +164,25 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
             if (updatedCol) setSelectedCollection(updatedCol);
         } catch (err) {
             toast.error('Failed to delete variation');
+        }
+    };
+
+    const handleFileUpload = async (file: File, isPrimary: boolean, index?: number) => {
+        try {
+            toast.loading('Uploading image...', { id: 'upload' });
+            const url = await uploadFile(file);
+            if (isPrimary) {
+                setVariationForm(prev => ({ ...prev, imageUrl: url }));
+            } else if (index !== undefined) {
+                setVariationForm(prev => {
+                    const newUrls = [...prev.additionalImageUrls];
+                    newUrls[index] = url;
+                    return { ...prev, additionalImageUrls: newUrls };
+                });
+            }
+            toast.success('Upload complete', { id: 'upload' });
+        } catch (err) {
+            toast.error('Upload failed', { id: 'upload' });
         }
     };
 
@@ -481,18 +501,29 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Primary Image URL</label>
-                                <input
-                                    className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-6 py-4 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gold-500 transition-all text-sm"
-                                    placeholder="https://..."
-                                    value={variationForm.imageUrl}
-                                    onChange={(e) => setVariationForm({ ...variationForm, imageUrl: e.target.value })}
-                                    required
-                                />
+                                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Primary Image</label>
+                                <div className="flex gap-4 items-center">
+                                    <input
+                                        className="flex-1 bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-6 py-4 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gold-500 transition-all text-sm"
+                                        placeholder="https://... or upload →"
+                                        value={variationForm.imageUrl}
+                                        onChange={(e) => setVariationForm({ ...variationForm, imageUrl: e.target.value })}
+                                        required
+                                    />
+                                    <label className="w-14 h-14 bg-gold-500 text-white rounded-2xl flex items-center justify-center cursor-pointer hover:bg-gold-600 transition-all shadow-lg shadow-gold-500/20">
+                                        <FontAwesomeIcon icon={faImage} />
+                                        <input 
+                                            type="file" 
+                                            className="hidden" 
+                                            accept="image/*"
+                                            onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], true)}
+                                        />
+                                    </label>
+                                </div>
                             </div>
                             <div>
                                 <div className="flex justify-between items-center mb-2">
-                                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest">Additional Image URLs</label>
+                                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest">Additional Images</label>
                                     <button 
                                         type="button" 
                                         onClick={() => setVariationForm({ ...variationForm, additionalImageUrls: [...variationForm.additionalImageUrls, ''] })}
@@ -506,7 +537,7 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
                                         <div key={idx} className="flex gap-2">
                                             <input
                                                 className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-4 py-3 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gold-500 transition-all text-sm"
-                                                placeholder="https://..."
+                                                placeholder="https://... or upload →"
                                                 value={url}
                                                 onChange={(e) => {
                                                     const newUrls = [...variationForm.additionalImageUrls];
@@ -514,6 +545,15 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
                                                     setVariationForm({ ...variationForm, additionalImageUrls: newUrls });
                                                 }}
                                             />
+                                            <label className="w-12 h-12 shrink-0 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-2xl flex items-center justify-center cursor-pointer hover:bg-gold-500 hover:text-white transition-all">
+                                                <FontAwesomeIcon icon={faImage} />
+                                                <input 
+                                                    type="file" 
+                                                    className="hidden" 
+                                                    accept="image/*"
+                                                    onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], false, idx)}
+                                                />
+                                            </label>
                                             <button 
                                                 type="button" 
                                                 onClick={() => {
