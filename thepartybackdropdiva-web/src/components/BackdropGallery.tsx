@@ -7,11 +7,14 @@ import {
     fetchBackdropCollections,
     type BackdropCollectionDto,
     createBackdropCollection,
-    deleteBackdropCollection
+    deleteBackdropCollection,
+    addBackdropImage,
+    updateBackdropImage,
+    deleteBackdropImage
 } from '../api/apiClient';
 import { useAuth } from '../context/AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTrash, faImage, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash, faImage, faChevronRight, faEdit, faMinus, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const FadingCollectionCover: React.FC<{ collection: BackdropCollectionDto }> = ({ collection }) => {
     const images = collection.images?.length > 0 ? collection.images.map(img => img.imageUrl) : [];
@@ -57,11 +60,33 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
     const [selectedCollection, setSelectedCollection] = useState<BackdropCollectionDto | null>(null);
     const [showAddModal, setShowAddModal] = useState(false);
     const [newCollectionName, setNewCollectionName] = useState('');
+    const [showVariationModal, setShowVariationModal] = useState(false);
+    const [fullScreenImages, setFullScreenImages] = useState<string[] | null>(null);
+    const [currentFullScreenIndex, setCurrentFullScreenIndex] = useState(0);
+    const [variationForm, setVariationForm] = useState<{ id?: string, title: string, imageUrl: string, additionalImageUrls: string[] }>({
+        title: '', imageUrl: '', additionalImageUrls: []
+    });
     const { isAdmin } = useAuth();
 
     useEffect(() => {
         loadCollections();
-    }, []);
+
+        const handleKeyPress = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setFullScreenImages(null);
+                setShowVariationModal(false);
+                setShowAddModal(false);
+            } else if (fullScreenImages) {
+                if (event.key === 'ArrowRight') {
+                    setCurrentFullScreenIndex(prev => (prev + 1) % fullScreenImages.length);
+                } else if (event.key === 'ArrowLeft') {
+                    setCurrentFullScreenIndex(prev => (prev - 1 + fullScreenImages.length) % fullScreenImages.length);
+                }
+            }
+        };
+        window.addEventListener('keydown', handleKeyPress);
+        return () => window.removeEventListener('keydown', handleKeyPress);
+    }, [fullScreenImages]);
 
     const loadCollections = async () => {
         try {
@@ -93,6 +118,51 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
             loadCollections();
         } catch (err) {
             toast.error('Failed to delete collection');
+        }
+    };
+
+    const handleSaveVariation = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!selectedCollection) return;
+        
+        try {
+            if (variationForm.id) {
+                await updateBackdropImage(selectedCollection.id, variationForm.id, {
+                    title: variationForm.title,
+                    imageUrl: variationForm.imageUrl,
+                    additionalImageUrls: variationForm.additionalImageUrls.filter(u => u.trim() !== '')
+                });
+                toast.success('Variation updated');
+            } else {
+                await addBackdropImage(selectedCollection.id, {
+                    title: variationForm.title,
+                    imageUrl: variationForm.imageUrl,
+                    additionalImageUrls: variationForm.additionalImageUrls.filter(u => u.trim() !== '')
+                });
+                toast.success('Variation added');
+            }
+            setShowVariationModal(false);
+            const data = await fetchBackdropCollections();
+            setCollections(data);
+            const updatedCol = data.find(c => c.id === selectedCollection.id);
+            if (updatedCol) setSelectedCollection(updatedCol);
+        } catch (err) {
+            toast.error('Failed to save variation');
+        }
+    };
+
+    const handleDeleteVariation = async (imageId: string) => {
+        if (!selectedCollection) return;
+        if (!window.confirm('Are you sure you want to delete this variation?')) return;
+        try {
+            await deleteBackdropImage(selectedCollection.id, imageId);
+            toast.success('Variation deleted');
+            const data = await fetchBackdropCollections();
+            setCollections(data);
+            const updatedCol = data.find(c => c.id === selectedCollection.id);
+            if (updatedCol) setSelectedCollection(updatedCol);
+        } catch (err) {
+            toast.error('Failed to delete variation');
         }
     };
 
@@ -155,13 +225,24 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
             {selectedCollection && createPortal(
                 <div className={isDark ? 'dark' : ''}>
                     {/* Header Controls (Fixed to Viewport) */}
-                    <div className="fixed top-10 left-10 z-[100] animate-in fade-in duration-500">
+                    <div className="fixed top-10 left-10 z-[100] animate-in fade-in duration-500 flex gap-4">
                         <button
                             onClick={() => setSelectedCollection(null)}
                             className="flex items-center gap-3 px-6 py-3 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-500 hover:text-gold-500 hover:scale-105 transition-all shadow-xl border border-gray-100 dark:border-gray-700 font-bold text-xs tracking-[0.2em] uppercase"
                         >
                             &larr; Back to Portfolios
                         </button>
+                        {isAdmin && (
+                            <button
+                                onClick={() => {
+                                    setVariationForm({ title: '', imageUrl: '', additionalImageUrls: [] });
+                                    setShowVariationModal(true);
+                                }}
+                                className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gold-500 text-white hover:bg-gold-600 hover:scale-105 transition-all shadow-xl font-bold text-xs tracking-[0.2em] uppercase"
+                            >
+                                <FontAwesomeIcon icon={faPlus} /> Add Variation
+                            </button>
+                        )}
                     </div>
 
                     <div
@@ -188,7 +269,7 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
                                         <span className="w-12 h-px bg-gold-500"></span>
                                         <span className="text-gold-500 text-xs font-bold uppercase tracking-[0.5em]">{selectedCollection.name}</span>
                                     </div>
-                                    <h2 className={`text-4xl md:text-6xl font-black tracking-tighter mb-8 whitespace-nowrap z-0 ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>
+                                    <h2 className={`text-4xl md:text-6xl font-black tracking-tighter mb-8 whitespace-nowrap z-0 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                         THE <span className="font-thin italic text-gold-500 mx-2">COMPLETE</span> SERIES
                                     </h2>
                                     <p className="text-gray-500 dark:text-gray-400 font-light text-lg leading-relaxed max-w-lg mb-12">
@@ -264,7 +345,13 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
                                         id={`variation-${img.id}`}
                                         className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-16 items-center px-4 md:px-20 animate-in fade-in slide-in-from-bottom-20 duration-1000`}
                                     >
-                                        <div className="w-full md:w-2/3 rounded-[3rem] overflow-hidden shadow-3xl border border-gray-100 dark:border-gray-800 h-[60vh] relative group/nested">
+                                        <div 
+                                            className="w-full md:w-2/3 rounded-[3rem] overflow-hidden shadow-3xl border border-gray-100 dark:border-gray-800 h-[60vh] relative group/nested cursor-zoom-in"
+                                            onClick={() => {
+                                                setFullScreenImages([img.imageUrl, ...(img.additionalImageUrls || [])]);
+                                                setCurrentFullScreenIndex(0);
+                                            }}
+                                        >
                                             {img.additionalImageUrls && img.additionalImageUrls.length > 0 ? (
                                                 <Carousel
                                                     indicators={true}
@@ -310,6 +397,31 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
                                                 <span className="group-hover:-translate-y-1 transition-transform italic">Return to Hero</span>
                                                 <span className="w-8 h-[1px] bg-gray-300 dark:bg-gray-700 group-hover:w-12 transition-all"></span>
                                             </button>
+
+                                            {isAdmin && (
+                                                <div className="flex gap-4 mt-6">
+                                                    <button 
+                                                        onClick={() => {
+                                                            setVariationForm({
+                                                                id: img.id,
+                                                                title: img.title,
+                                                                imageUrl: img.imageUrl,
+                                                                additionalImageUrls: img.additionalImageUrls || []
+                                                            });
+                                                            setShowVariationModal(true);
+                                                        }}
+                                                        className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-gold-500 hover:text-white transition-colors shadow-sm"
+                                                    >
+                                                        <FontAwesomeIcon icon={faEdit} className="mr-2" /> Edit
+                                                    </button>
+                                                    <button 
+                                                        onClick={() => handleDeleteVariation(img.id)}
+                                                        className="px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-red-500 hover:text-white transition-colors shadow-sm"
+                                                    >
+                                                        <FontAwesomeIcon icon={faTrash} className="mr-2" /> Delete
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))}
@@ -346,6 +458,127 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
                         </div>
                     </form>
                 </div>
+            )}
+
+            {/* Variation Modal */}
+            {showVariationModal && createPortal(
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-8">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowVariationModal(false)}></div>
+                    <form onSubmit={handleSaveVariation} className="relative bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-2xl w-full max-w-lg animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto no-scrollbar">
+                        <h3 className="text-2xl font-light mb-8 text-gray-900 dark:text-gray-100">
+                            {variationForm.id ? 'Edit Variation' : 'New Variation'}
+                        </h3>
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Variation Title</label>
+                                <input
+                                    autoFocus
+                                    className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-6 py-4 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gold-500 transition-all"
+                                    placeholder="e.g. Sunset Glow"
+                                    value={variationForm.title}
+                                    onChange={(e) => setVariationForm({ ...variationForm, title: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Primary Image URL</label>
+                                <input
+                                    className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-6 py-4 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gold-500 transition-all text-sm"
+                                    placeholder="https://..."
+                                    value={variationForm.imageUrl}
+                                    onChange={(e) => setVariationForm({ ...variationForm, imageUrl: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest">Additional Image URLs</label>
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setVariationForm({ ...variationForm, additionalImageUrls: [...variationForm.additionalImageUrls, ''] })}
+                                        className="text-xs text-gold-500 hover:text-gold-600 font-bold uppercase"
+                                    >
+                                        <FontAwesomeIcon icon={faPlus} className="mr-1" /> Add Image
+                                    </button>
+                                </div>
+                                <div className="space-y-3">
+                                    {variationForm.additionalImageUrls.map((url, idx) => (
+                                        <div key={idx} className="flex gap-2">
+                                            <input
+                                                className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-2xl px-4 py-3 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-gold-500 transition-all text-sm"
+                                                placeholder="https://..."
+                                                value={url}
+                                                onChange={(e) => {
+                                                    const newUrls = [...variationForm.additionalImageUrls];
+                                                    newUrls[idx] = e.target.value;
+                                                    setVariationForm({ ...variationForm, additionalImageUrls: newUrls });
+                                                }}
+                                            />
+                                            <button 
+                                                type="button" 
+                                                onClick={() => {
+                                                    const newUrls = [...variationForm.additionalImageUrls];
+                                                    newUrls.splice(idx, 1);
+                                                    setVariationForm({ ...variationForm, additionalImageUrls: newUrls });
+                                                }}
+                                                className="w-12 h-12 shrink-0 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"
+                                            >
+                                                <FontAwesomeIcon icon={faMinus} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {variationForm.additionalImageUrls.length === 0 && (
+                                        <div className="text-xs italic text-gray-500 text-center py-2">No additional images.</div>
+                                    )}
+                                </div>
+                            </div>
+                            
+                            <div className="pt-4 flex gap-4">
+                                <button type="button" onClick={() => setShowVariationModal(false)} className="w-1/3 py-4 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 font-bold rounded-2xl transition-all">Cancel</button>
+                                <button type="submit" className="w-2/3 py-4 bg-gold-600 hover:bg-gold-500 text-white font-bold rounded-2xl shadow-xl shadow-gold-500/20 transition-all">
+                                    Save Variation
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>,
+                document.body
+            )}
+
+            {/* Full Screen Variation Viewer */}
+            {fullScreenImages && createPortal(
+                <div className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center animate-in fade-in duration-300 backdrop-blur-sm">
+                    <button 
+                        onClick={() => setFullScreenImages(null)}
+                        className="fixed top-8 right-8 z-[210] w-14 h-14 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+                    >
+                        <FontAwesomeIcon icon={faTimes} className="text-2xl" /> 
+                    </button>
+                    
+                    <div className="w-full h-full flex items-center justify-center p-4 md:p-20">
+                        <Carousel 
+                            activeIndex={currentFullScreenIndex}
+                            onSelect={(index) => setCurrentFullScreenIndex(index)}
+                            interval={null} 
+                            fade 
+                            indicators={fullScreenImages.length > 1} 
+                            className="w-full h-full luxury-carousel-fullscreen flex items-center"
+                        >
+                            {fullScreenImages.map((url, idx) => (
+                                <Carousel.Item key={idx} className="h-[85vh]">
+                                    <div className="w-full h-full flex items-center justify-center">
+                                        <img 
+                                            src={url} 
+                                            alt={`View ${idx + 1}`} 
+                                            className="max-w-full max-h-full object-contain shadow-2xl rounded-sm" 
+                                        />
+                                    </div>
+                                </Carousel.Item>
+                            ))}
+                        </Carousel>
+                    </div>
+                </div>,
+                document.body
             )}
         </section>
     );

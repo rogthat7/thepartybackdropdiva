@@ -9,6 +9,28 @@ export const apiClient = axios.create({
     },
 });
 
+// Request Interceptor: Automatically attach the token if it exists
+apiClient.interceptors.request.use(config => {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
+// Response Interceptor: Handle 401 errors (Optional: clear storage or redirect)
+apiClient.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response?.status === 401) {
+            console.error('Session expired or unauthorized. Clearing auth data.');
+            // Optional: localStorage.removeItem('auth_token');
+            // Optional: window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
+
 export interface BackdropThemeDto {
     id: string;
     name: string;
@@ -135,44 +157,32 @@ export const fetchMyEvents = async () => {
 // Admin Endpoints
 // Admin Backdrop Collection Endpoints
 export const createBackdropCollection = async (dto: Partial<BackdropCollectionDto>) => {
-    const token = localStorage.getItem('auth_token');
-    const res = await apiClient.post<BackdropCollectionDto>('/BackdropCollections', dto, {
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const res = await apiClient.post<BackdropCollectionDto>('/BackdropCollections', dto);
     return res.data;
 };
 
 export const updateBackdropCollection = async (id: string, dto: Partial<BackdropCollectionDto>) => {
-    const token = localStorage.getItem('auth_token');
-    await apiClient.put(`/BackdropCollections/${id}`, dto, {
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
+    await apiClient.put(`/BackdropCollections/${id}`, dto);
 };
 
 export const deleteBackdropCollection = async (id: string) => {
-    const token = localStorage.getItem('auth_token');
-    await apiClient.delete(`/BackdropCollections/${id}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
+    await apiClient.delete(`/BackdropCollections/${id}`);
 };
 
 export const addBackdropImage = async (collectionId: string, dto: Partial<BackdropImageDto>) => {
-    const token = localStorage.getItem('auth_token');
-    const res = await apiClient.post<BackdropImageDto>(`/BackdropCollections/${collectionId}/images`, dto, {
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const res = await apiClient.post<BackdropImageDto>(`/BackdropCollections/${collectionId}/images`, dto);
     return res.data;
 };
 
+export const updateBackdropImage = async (collectionId: string, imageId: string, dto: Partial<BackdropImageDto>) => {
+    await apiClient.put(`/BackdropCollections/${collectionId}/images/${imageId}`, dto);
+};
+
 export const deleteBackdropImage = async (collectionId: string, imageId: string) => {
-    const token = localStorage.getItem('auth_token');
-    await apiClient.delete(`/BackdropCollections/${collectionId}/images/${imageId}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
+    await apiClient.delete(`/BackdropCollections/${collectionId}/images/${imageId}`);
 };
 
 export const addBookingFollowUp = async (bookingId: string, note: string) => {
-
     const token = localStorage.getItem('auth_token');
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/bookings/${bookingId}/followup`, {
         method: 'POST',

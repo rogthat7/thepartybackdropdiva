@@ -30,6 +30,8 @@ services:
         condition: service_healthy
       mailpit:
         condition: service_started
+      azurite:
+        condition: service_started
 
   ui:
     build:
@@ -46,5 +48,18 @@ services:
       - "1025:1025"
       - "8025:8025"
 
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    hostname: azurite
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    volumes:
+      - azurite_data:/data
+    command: azurite-blob --blobHost 0.0.0.0 --blobPort 10000
+
+
 volumes:
   postgres_data:
+  azurite_data:

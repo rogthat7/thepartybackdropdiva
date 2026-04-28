@@ -14,5 +14,6 @@ public class BackdropImageDto
     public Guid Id { get; set; }
     public Guid BackdropCollectionId { get; set; }
     public string ImageUrl { get; set; } = string.Empty;
+    public string[]? AdditionalImageUrls { get; set; }
     public string Title { get; set; } = string.Empty;
 }

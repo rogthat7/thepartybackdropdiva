@@ -8,7 +8,7 @@ namespace thepartybackdropdiva.Api.Controllers;
 public class InquiriesController : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<BookingResponseDto>> CreateInquiry([FromBody] BookingRequestDto request)
+    public ActionResult<BookingResponseDto> CreateInquiry([FromBody] BookingRequestDto request)
     {
         // Placeholder for booking logic utilizing PricingEngine
         // In a real scenario, this would be delegated to a BookingService
