@@ -37,6 +37,8 @@ export interface CateringMenuDto {
     description: string;
     basePricePerPlate: number;
     menuItems: MenuItemDto[];
+    isCustom?: boolean;
+    userId?: string;
 }
 
 export interface BackdropImageDto {
@@ -67,7 +69,11 @@ export const fetchBackdropCollections = async () => {
 
 
 export const fetchMenus = async () => {
-    const res = await apiClient.get<CateringMenuDto[]>('/Catalog/menus');
+    const token = localStorage.getItem('auth_token');
+    const headers: any = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    
+    const res = await apiClient.get<CateringMenuDto[]>('/Catalog/menus', { headers });
     return res.data;
 };
 
@@ -79,6 +85,23 @@ export const createCustomMenu = async (name: string, menuItemIds: string[]) => {
     
     const res = await apiClient.post<CateringMenuDto>('/Catalog/menus/custom', { name, menuItemIds }, { headers });
     return res.data;
+};
+
+export const updateCustomMenu = async (id: string, name: string, menuItemIds: string[]) => {
+    const token = localStorage.getItem('auth_token');
+    const headers: any = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    
+    const res = await apiClient.put<CateringMenuDto>(`/Catalog/menus/custom/${id}`, { name, menuItemIds }, { headers });
+    return res.data;
+};
+
+export const deleteCustomMenu = async (id: string) => {
+    const token = localStorage.getItem('auth_token');
+    const headers: any = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    
+    await apiClient.delete(`/Catalog/menus/custom/${id}`, { headers });
 };
 
 // Member Endpoints

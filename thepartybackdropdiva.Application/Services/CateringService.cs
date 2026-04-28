@@ -18,53 +18,98 @@ public class CateringService : ICateringService
         _mapper = mapper;
     }
 
-    public async Task<IReadOnlyList<CateringMenuDto>> GetAllMenusAsync()
+    public async Task<IReadOnlyList<CateringMenuDto>> GetAllMenusAsync(Guid? userId = null)
     {
-        var menus = await _context.CateringMenus
+        var query = _context.CateringMenus
             .Include(m => m.MenuItems)
-            .Where(m => !m.IsCustom) // Only return standard packages
-            .ToListAsync();
+            .AsQueryable();
+
+        if (userId.HasValue)
+        {
+            // Return standard packages OR custom packages belonging to this user
+            query = query.Where(m => !m.IsCustom || m.UserId == userId);
+        }
+        else
+        {
+            // For guests, only return standard packages
+            // (Unless we want them to see their guest custom packages if we tracked them, 
+            // but currently we only link to UserId)
+            query = query.Where(m => !m.IsCustom);
+        }
+
+        var menus = await query.ToListAsync();
             
         return _mapper.Map<IReadOnlyList<CateringMenuDto>>(menus);
     }
 
     public async Task<CateringMenuDto> CreateCustomMenuAsync(string name, Guid? userId, List<Guid> menuItemIds)
     {
-        // Calculate price and build the items
         var items = await _context.MenuItems
             .Where(i => menuItemIds.Contains(i.Id))
             .ToListAsync();
-
-        var basePrice = items.Sum(i => i.BasePrice);
 
         var customMenu = new CateringMenu
         {
             Name = name,
             Description = "Custom Package tailored for your event.",
-            BasePricePerPlate = basePrice,
+            BasePricePerPlate = items.Sum(i => i.BasePrice),
             IsCustom = true,
             UserId = userId,
+            MenuItems = items
         };
-        
-        // Clone items for the custom package to avoid EF tracking issues
-        foreach (var item in items)
-        {
-            customMenu.MenuItems.Add(new MenuItem
-            {
-                Name = item.Name,
-                Description = item.Description,
-                Category = item.Category,
-                BasePrice = item.BasePrice,
-                IsVegetarian = item.IsVegetarian,
-                IsGlutenFree = item.IsGlutenFree,
-                ItemType = item.ItemType,
-                ImageUrl = item.ImageUrl
-            });
-        }
 
         _context.CateringMenus.Add(customMenu);
         await _context.SaveChangesAsync();
 
         return _mapper.Map<CateringMenuDto>(customMenu);
+    }
+
+    public async Task<CateringMenuDto> UpdateCustomMenuAsync(Guid menuId, string name, Guid? userId, List<Guid> menuItemIds)
+    {
+        // Update the main menu properties directly
+        await _context.CateringMenus
+            .Where(m => m.Id == menuId)
+            .ExecuteUpdateAsync(s => s
+                .SetProperty(m => m.Name, name)
+                .SetProperty(m => m.UpdatedAt, DateTime.UtcNow));
+
+        var customMenu = await _context.CateringMenus
+            .Include(m => m.MenuItems)
+            .FirstOrDefaultAsync(m => m.Id == menuId);
+
+        if (customMenu == null || !customMenu.IsCustom)
+        {
+            throw new Exception("Custom menu not found or is not a custom menu.");
+        }
+
+        // Update items relationship
+        customMenu.MenuItems.Clear();
+        var items = await _context.MenuItems
+            .Where(i => menuItemIds.Contains(i.Id))
+            .ToListAsync();
+
+        customMenu.BasePricePerPlate = items.Sum(i => i.BasePrice);
+        foreach (var item in items)
+        {
+            customMenu.MenuItems.Add(item);
+        }
+
+        await _context.SaveChangesAsync();
+
+        return _mapper.Map<CateringMenuDto>(customMenu);
+    }
+
+    public async Task DeleteCustomMenuAsync(Guid menuId, Guid? userId)
+    {
+        var customMenu = await _context.CateringMenus
+            .FirstOrDefaultAsync(m => m.Id == menuId);
+
+        if (customMenu == null || !customMenu.IsCustom)
+        {
+            return;
+        }
+
+        _context.CateringMenus.Remove(customMenu);
+        await _context.SaveChangesAsync();
     }
 }

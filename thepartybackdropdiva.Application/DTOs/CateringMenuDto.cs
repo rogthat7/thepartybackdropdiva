@@ -8,4 +8,6 @@ public class CateringMenuDto
     public decimal BasePricePerPlate { get; set; }
 
     public List<MenuItemDto> MenuItems { get; set; } = new();
+    public bool IsCustom { get; set; }
+    public Guid? UserId { get; set; }
 }

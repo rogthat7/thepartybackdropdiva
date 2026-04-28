@@ -6,7 +6,5 @@ public class MenuItem : ServiceItem
     public bool IsVegetarian { get; set; }
     public bool IsGlutenFree { get; set; }
     
-    // Link back to a Catering Menu Package
-    public Guid? CateringMenuId { get; set; }
-    public CateringMenu? CateringMenu { get; set; }
+    public ICollection<CateringMenu> CateringMenus { get; set; } = new List<CateringMenu>();
 }

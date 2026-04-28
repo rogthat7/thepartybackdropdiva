@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchMyEvents, type BookingDto } from '../api/apiClient';
 
 export const YourEvents: React.FC = () => {
@@ -25,6 +26,12 @@ export const YourEvents: React.FC = () => {
 
     return (
         <div className="max-w-6xl mx-auto px-8 py-20">
+            <Link to="/" className="text-gold-500 hover:text-gold-600 mb-8 inline-flex items-center gap-2 transition-colors group">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span className="text-sm font-semibold uppercase tracking-wider">Back to Home</span>
+            </Link>
             <header className="mb-16">
                 <h1 className="text-4xl font-light tracking-tight mb-4">Your <span className="font-semibold text-gold-500">Events</span></h1>
                 <p className="text-gray-500 text-lg max-w-2xl">Track the status of your catering and backdrop inquiries. Our team will provide follow-ups as we progress.</p>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import toast from 'react-hot-toast';
 import Carousel from 'react-bootstrap/Carousel';
 
 import {
@@ -81,7 +82,7 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
             setShowAddModal(false);
             loadCollections();
         } catch (err) {
-            alert('Failed to create collection');
+            toast.error('Failed to create collection');
         }
     };
 
@@ -91,7 +92,7 @@ export const BackdropGallery: React.FC<{ isDark?: boolean }> = ({ isDark = true 
             await deleteBackdropCollection(id);
             loadCollections();
         } catch (err) {
-            alert('Failed to delete');
+            toast.error('Failed to delete collection');
         }
     };
 

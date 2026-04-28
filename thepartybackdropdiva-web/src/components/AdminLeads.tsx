@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { type AdminConsultationRequest, getAllConsultations, updateConsultationStatus, deleteConsultationRequest, getAllBookings } from '../services/ConsultationService';
 import { AdminFollowUpForm } from './AdminFollowUpForm';
 import { type AdvisorDto, getAllAdvisors, assignAdvisor } from '../services/AdvisorService';
@@ -65,8 +66,9 @@ export const AdminLeads: React.FC = () => {
         try {
             await updateConsultationStatus(id, newStatus);
             setLeads(leads.map(lead => lead.id === id ? { ...lead, status: newStatus } : lead));
+            toast.success(`Status updated to ${newStatus}`);
         } catch (err) {
-            alert('Failed to update status.');
+            toast.error('Failed to update status.');
         }
     };
 
@@ -75,8 +77,9 @@ export const AdminLeads: React.FC = () => {
         try {
             await deleteConsultationRequest(id);
             setLeads(leads.filter(lead => lead.id !== id));
+            toast.success('Lead deleted successfully.');
         } catch (err) {
-            alert('Failed to delete lead.');
+            toast.error('Failed to delete lead.');
         }
     };
 
@@ -85,9 +88,9 @@ export const AdminLeads: React.FC = () => {
         try {
             await assignAdvisor(consultationId, advisorId);
             fetchLeads(); // Refresh to show assignment
-            alert('Advisor assigned successfully.');
+            toast.success('Advisor assigned successfully.');
         } catch (err) {
-            alert('Failed to assign advisor.');
+            toast.error('Failed to assign advisor.');
         }
     };
 
