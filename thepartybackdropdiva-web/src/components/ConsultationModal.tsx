@@ -95,6 +95,10 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email.trim() && !phone.trim()) {
+      setStatus('error');
+      return;
+    }
     setStatus('loading');
     try {
       await submitConsultation({
@@ -158,7 +162,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
             <span className="text-gold-500 text-xs font-bold uppercase tracking-[0.25em]">Event Inquiry</span>
           </div>
           <h3 className="text-2xl font-light">Book a <span className="font-semibold text-gold-500">Consultation</span></h3>
-          <p className="text-sm text-gray-400 mt-1">Share a few details — all fields are optional. The more you share, the better we can prepare.</p>
+          <p className="text-sm text-gray-400 mt-1">Share a few details — fields marked with <span className="text-red-500">*</span> are mandatory (including at least one contact method).</p>
         </div>
 
         {/* Body */}
@@ -175,8 +179,9 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
               {/* Row 1: Name + Event Type */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className={labelBase}>Your Name</label>
+                  <label className={labelBase}>Your Name <span className="text-red-500">*</span></label>
                   <input
+                    required
                     type="text"
                     value={name}
                     onChange={e => setName(e.target.value)}
@@ -186,8 +191,9 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
                   />
                 </div>
                 <div>
-                  <label className={labelBase}>Event Type</label>
+                  <label className={labelBase}>Event Type <span className="text-red-500">*</span></label>
                   <select
+                    required
                     value={eventType}
                     onChange={e => setEventType(e.target.value)}
                     className={inputBase}
@@ -202,13 +208,14 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
               {/* Row 2: Event Date + Guest Count */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className={labelBase}>Event Date</label>
+                  <label className={labelBase}>Event Date <span className="text-red-500">*</span></label>
                   <input
+                    required
                     type="date"
                     value={eventDate}
                     onChange={e => setEventDate(e.target.value)}
                     min={new Date().toISOString().split('T')[0]}
-                    className={`${inputBase} ${!eventDate ? 'text-gray-500 dark:text-gray-600' : ''}`}
+                    className={`${inputBase} ${!eventDate ? 'text-gray-500 dark:text-gray-600' : ''} ${isDark ? 'dark-calendar-picker' : ''}`}
                     disabled={status === 'loading'}
                   />
                 </div>
@@ -284,7 +291,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
               {/* Divider */}
               <div className={`flex items-center gap-4 ${isDark ? 'text-gray-600' : 'text-gray-200'}`}>
                 <div className="flex-1 h-px bg-current"></div>
-                <span className="text-xs uppercase tracking-widest opacity-60">Contact</span>
+                <span className="text-xs uppercase tracking-widest opacity-60">Contact <span className="text-red-500">*</span></span>
                 <div className="flex-1 h-px bg-current"></div>
               </div>
 
@@ -329,7 +336,9 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
 
               {status === 'error' && (
                 <p className="text-red-500 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
-                  Something went wrong. Please try again or contact us directly.
+                  {!email.trim() && !phone.trim() 
+                    ? 'Please provide at least one contact method (Email or Phone).' 
+                    : 'Something went wrong. Please try again or contact us directly.'}
                 </p>
               )}
 
