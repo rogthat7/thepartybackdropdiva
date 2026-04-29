@@ -206,7 +206,7 @@ export const CateringMenuSelector: React.FC = () => {
     };
 
     const getPackageStyle = (name: string, isSelected: boolean, theme: string = 'Default') => {
-        const baseStyle = "flex-shrink-0 w-60 px-6 py-4 rounded-2xl border-2 text-left transition-all duration-500 relative overflow-hidden ";
+        const baseStyle = "w-full px-6 py-4 rounded-2xl border-2 text-left transition-all duration-500 relative overflow-hidden ";
 
         if (name.includes("Silver")) {
             if (isSelected) {
@@ -327,7 +327,7 @@ export const CateringMenuSelector: React.FC = () => {
                 <div className="lg:col-span-2 space-y-8">
                     {mode === 'packages' ? (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            <div className="flex gap-4 overflow-x-auto pb-6 pt-2 hide-scrollbar px-2 items-center">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6 pt-2 px-2">
                                 {menus.filter(m => !m.isCustom).map(m => {
                                     const isSelected = selectedMenuId === m.id;
                                     const isSpecial = !['silver', 'gold', 'platinum'].some(t => m.name.toLowerCase().includes(t));
