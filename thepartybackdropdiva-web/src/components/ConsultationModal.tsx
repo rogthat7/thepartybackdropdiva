@@ -55,11 +55,16 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
           setVenueLocation(location);
         }
       };
-
+      // Capture manual typing in the autocomplete field
+      const handleInput = (e: any) => {
+        setVenueLocation(e.target ? e.target.value : '');
+      };
       const element = autocompleteRef.current;
       element.addEventListener('gmp-placeselect', handlePlaceSelect);
+      element.addEventListener('input', handleInput);
       return () => {
         element.removeEventListener('gmp-placeselect', handlePlaceSelect);
+        element.removeEventListener('input', handleInput);
       };
     }
   }, [isLoaded]);
