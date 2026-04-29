@@ -9,6 +9,7 @@ public class CateringMenu : BaseEntity
     // Support for custom packages created by users
     public bool IsCustom { get; set; } = false;
     public Guid? UserId { get; set; }
+    public string? Theme { get; set; }
     
     public ICollection<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
 }

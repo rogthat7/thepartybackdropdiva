@@ -205,7 +205,7 @@ export const CateringMenuSelector: React.FC = () => {
         });
     };
 
-    const getPackageStyle = (name: string, isSelected: boolean) => {
+    const getPackageStyle = (name: string, isSelected: boolean, theme: string = 'Default') => {
         const baseStyle = "flex-shrink-0 w-60 px-6 py-4 rounded-2xl border-2 text-left transition-all duration-500 relative overflow-hidden ";
 
         if (name.includes("Silver")) {
@@ -226,20 +226,62 @@ export const CateringMenuSelector: React.FC = () => {
                 : "border-gray-700 bg-transparent hover:border-gray-500 opacity-80 hover:opacity-100");
         }
 
+        // Festival Themes
+        if (theme === 'Christmas') {
+            return baseStyle + (isSelected
+                ? "border-red-500 border-4 ring-inset ring-4 ring-green-500/30 bg-red-50/50 dark:bg-red-900/10 shadow-[0_0_25px_rgba(239,68,68,0.5)] transform scale-[1.02] z-10"
+                : "border-green-600/40 bg-white dark:bg-gray-900/40 hover:border-red-500 opacity-90 hover:opacity-100");
+        }
+        if (theme === 'Halloween') {
+            return baseStyle + (isSelected
+                ? "border-orange-500 border-4 ring-inset ring-4 ring-purple-500/30 bg-orange-50/50 dark:bg-orange-900/10 shadow-[0_0_25px_rgba(249,115,22,0.5)] transform scale-[1.02] z-10"
+                : "border-purple-600/40 bg-white dark:bg-gray-900/40 hover:border-orange-500 opacity-90 hover:opacity-100");
+        }
+        if (theme === 'Easter') {
+            return baseStyle + (isSelected
+                ? "border-sky-400 border-4 ring-inset ring-4 ring-pink-300/30 bg-sky-50/50 dark:bg-sky-900/10 shadow-[0_0_25px_rgba(56,189,248,0.5)] transform scale-[1.02] z-10"
+                : "border-pink-300/40 bg-white dark:bg-gray-900/40 hover:border-sky-400 opacity-90 hover:opacity-100");
+        }
+        if (theme === 'Diwali') {
+            return baseStyle + (isSelected
+                ? "border-orange-400 border-4 ring-inset ring-4 ring-yellow-300/30 bg-orange-50/50 dark:bg-orange-900/10 shadow-[0_0_25px_rgba(251,146,60,0.5)] transform scale-[1.02] z-10"
+                : "border-yellow-400/40 bg-white dark:bg-gray-900/40 hover:border-orange-400 opacity-90 hover:opacity-100");
+        }
+        if (theme === 'Lunar') {
+            return baseStyle + (isSelected
+                ? "border-red-600 border-4 ring-inset ring-4 ring-gold-500/30 bg-red-50/50 dark:bg-red-900/10 shadow-[0_0_25px_rgba(220,38,38,0.5)] transform scale-[1.02] z-10"
+                : "border-gold-500/40 bg-white dark:bg-gray-900/40 hover:border-red-600 opacity-90 hover:opacity-100");
+        }
+
         return baseStyle + (isSelected
-            ? "border-gold-500 bg-gold-50/50 dark:bg-gold-900/10 transform scale-[1.02]"
-            : "border-transparent bg-transparent hover:border-gray-200 dark:hover:border-gray-700 opacity-70 hover:opacity-100");
+            ? "border-amber-400 border-4 ring-inset ring-4 ring-white/30 bg-gold-50/50 dark:bg-gold-900/10 shadow-[0_0_25px_rgba(251,191,36,0.5)] transform scale-[1.02] z-10"
+            : "border-gold-500/40 bg-white dark:bg-gray-900/40 hover:border-gold-500 opacity-90 hover:opacity-100");
     };
 
-    const getPackageTextStyle = (name: string, isSelected: boolean) => {
+    const getPackageTextStyle = (name: string, isSelected: boolean, theme: string = 'Default') => {
         if (!isSelected && name.includes("Platinum")) return "text-gray-300";
         if (!isSelected && name.includes("Silver")) return "text-slate-800 dark:text-slate-200";
         if (!isSelected && name.includes("Gold")) return "text-amber-800/80";
-        if (!isSelected) return "text-gray-800 dark:text-gray-200";
+        
+        if (!isSelected) {
+            if (theme === 'Christmas') return "text-red-800 dark:text-red-200";
+            if (theme === 'Halloween') return "text-orange-800 dark:text-orange-200";
+            if (theme === 'Easter') return "text-sky-800 dark:text-sky-200";
+            if (theme === 'Diwali') return "text-orange-700 dark:text-orange-300";
+            if (theme === 'Lunar') return "text-red-700 dark:text-red-300";
+            return "text-gray-800 dark:text-gray-200";
+        }
 
         if (name.includes("Silver")) return "text-slate-900 dark:text-white [text-shadow:0_0_10px_rgba(255,255,255,0.5)]";
         if (name.includes("Gold")) return "!text-[#451a03] [text-shadow:0_0_5px_rgba(255,255,255,1),0_0_10px_rgba(255,255,255,1),0_0_20px_rgba(255,255,255,0.8)]";
         if (name.includes("Platinum")) return "text-white [text-shadow:0_0_15px_rgba(255,255,255,0.8),0_0_5px_rgba(255,255,255,0.5)]";
+        
+        if (theme === 'Christmas') return "text-red-600 dark:text-red-400 font-black";
+        if (theme === 'Halloween') return "text-orange-600 dark:text-orange-400 font-black";
+        if (theme === 'Easter') return "text-sky-600 dark:text-sky-400 font-black";
+        if (theme === 'Diwali') return "text-orange-500 dark:text-yellow-400 font-black";
+        if (theme === 'Lunar') return "text-red-600 dark:text-yellow-500 font-black";
+        
         return "text-gold-600 dark:text-gold-400";
     };
 
@@ -288,16 +330,35 @@ export const CateringMenuSelector: React.FC = () => {
                             <div className="flex gap-4 overflow-x-auto pb-6 pt-2 hide-scrollbar px-2 items-center">
                                 {menus.filter(m => !m.isCustom).map(m => {
                                     const isSelected = selectedMenuId === m.id;
+                                    const isSpecial = !['silver', 'gold', 'platinum'].some(t => m.name.toLowerCase().includes(t));
                                     return (
                                         <button
                                             key={m.id}
                                             onClick={() => setSelectedMenuId(m.id)}
-                                            className={getPackageStyle(m.name, isSelected)}
+                                            className={getPackageStyle(m.name, isSelected, m.theme)}
                                         >
+                                        {(() => {
+                                            const themeName = m.theme && m.theme !== '' ? m.theme : (isSpecial ? 'default' : null);
+                                            return themeName ? (
+                                                <div 
+                                                    className={`absolute inset-0 opacity-15 group-hover:opacity-25 transition-opacity pointer-events-none ${isSelected ? 'opacity-30' : ''}`}
+                                                    style={{ 
+                                                        backgroundImage: `url(/images/themes/${themeName.toLowerCase()}.png)`,
+                                                        backgroundSize: 'cover',
+                                                        backgroundPosition: 'center'
+                                                    }}
+                                                />
+                                            ) : null;
+                                        })()}
+                                            {isSpecial && (
+                                                <div className="diagonal-tag-right">
+                                                    <span>{m.theme && m.theme !== 'Default' ? m.theme : 'Special'}</span>
+                                                </div>
+                                            )}
                                             {isSelected && m.name.includes("Platinum") && (
                                                 <div className="absolute -inset-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent rotate-45 transform translate-x-[-100%] animate-[shimmer_3s_infinite] z-10" />
                                             )}
-                                            <h3 className={`text-xl font-bold mb-1 ${getPackageTextStyle(m.name, isSelected)}`}>{m.name}</h3>
+                                            <h3 className={`text-xl font-bold mb-1 ${getPackageTextStyle(m.name, isSelected, m.theme)}`}>{m.name}</h3>
                                             <p className={`text-sm font-semibold mb-2 ${getPackageDescStyle(m.name, isSelected)}`}>${m.basePricePerPlate}/plate</p>
                                             <p className={`text-xs max-w-[200px] line-clamp-2 ${getPackageDescStyle(m.name, isSelected)} opacity-80`}>{m.description}</p>
                                         </button>
@@ -438,7 +499,7 @@ export const CateringMenuSelector: React.FC = () => {
                 </div>
 
                 <div className="lg:col-span-1">
-                    <div className="bg-white dark:!bg-gray-900 p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-800 sticky top-8">
+                    <div className="bg-white dark:!bg-gray-900 p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-800 sticky top-8 lg:mt-[158px] mt-0">
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Event Estimate</h3>
 
                         <div className="mb-8">

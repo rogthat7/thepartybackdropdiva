@@ -112,4 +112,88 @@ public class CateringService : ICateringService
         _context.CateringMenus.Remove(customMenu);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<IReadOnlyList<MenuItemDto>> GetAllMenuItemsAsync()
+    {
+        var items = await _context.MenuItems.ToListAsync();
+        return _mapper.Map<IReadOnlyList<MenuItemDto>>(items);
+    }
+
+    public async Task<MenuItemDto> CreateMenuItemAsync(MenuItemDto dto)
+    {
+        var item = _mapper.Map<MenuItem>(dto);
+        item.Id = Guid.NewGuid();
+        item.ItemType = "Menu"; // Ensure discriminator is set if needed (though EF handles it)
+
+        _context.MenuItems.Add(item);
+        await _context.SaveChangesAsync();
+
+        return _mapper.Map<MenuItemDto>(item);
+    }
+
+    public async Task<MenuItemDto> UpdateMenuItemAsync(Guid id, MenuItemDto dto)
+    {
+        var item = await _context.MenuItems.FindAsync(id);
+        if (item == null) throw new Exception("MenuItem not found.");
+
+        _mapper.Map(dto, item);
+        item.Id = id; // Ensure ID doesn't change
+
+        await _context.SaveChangesAsync();
+        return _mapper.Map<MenuItemDto>(item);
+    }
+
+    public async Task DeleteMenuItemAsync(Guid id)
+    {
+        var item = await _context.MenuItems.FindAsync(id);
+        if (item != null)
+        {
+            _context.MenuItems.Remove(item);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task<CateringMenuDto> CreateMenuAsync(CateringMenuDto dto)
+    {
+        var menu = _mapper.Map<CateringMenu>(dto);
+        menu.Id = Guid.NewGuid();
+        menu.IsCustom = false;
+        
+        // Handle menu items
+        var itemIds = dto.MenuItems.Select(i => i.Id).ToList();
+        menu.MenuItems = await _context.MenuItems.Where(i => itemIds.Contains(i.Id)).ToListAsync();
+
+        _context.CateringMenus.Add(menu);
+        await _context.SaveChangesAsync();
+
+        return _mapper.Map<CateringMenuDto>(menu);
+    }
+
+    public async Task<CateringMenuDto> UpdateMenuAsync(Guid id, CateringMenuDto dto)
+    {
+        var menu = await _context.CateringMenus.Include(m => m.MenuItems).FirstOrDefaultAsync(m => m.Id == id);
+        if (menu == null) throw new Exception("CateringMenu not found.");
+
+        _mapper.Map(dto, menu);
+        menu.Id = id;
+        menu.IsCustom = false;
+
+        // Update items relationship
+        menu.MenuItems.Clear();
+        var itemIds = dto.MenuItems.Select(i => i.Id).ToList();
+        menu.MenuItems = await _context.MenuItems.Where(i => itemIds.Contains(i.Id)).ToListAsync();
+
+        await _context.SaveChangesAsync();
+        return _mapper.Map<CateringMenuDto>(menu);
+    }
+
+    public async Task DeleteMenuAsync(Guid id)
+    {
+        var menu = await _context.CateringMenus.FindAsync(id);
+        if (menu != null)
+        {
+            _context.CateringMenus.Remove(menu);
+            await _context.SaveChangesAsync();
+        }
+    }
 }

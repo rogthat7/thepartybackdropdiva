@@ -6,13 +6,14 @@ import { AdminFollowUpForm } from './AdminFollowUpForm';
 import { type AdvisorDto, getAllAdvisors, assignAdvisor } from '../services/AdvisorService';
 import { SupportRequests } from './SupportRequests';
 import { AdvisorAssignedConsultations } from './AdvisorAssignedConsultations';
+import { AdminCatering } from './AdminCatering';
 
 
 export const AdminLeads: React.FC = () => {
     const [leads, setLeads] = useState<AdminConsultationRequest[]>([]);
     const [bookings, setBookings] = useState<any[]>([]);
     const [advisors, setAdvisors] = useState<AdvisorDto[]>([]);
-    const [view, setView] = useState<'leads' | 'bookings' | 'support' | 'assignments'>('leads');
+    const [view, setView] = useState<'leads' | 'bookings' | 'support' | 'assignments' | 'catering'>('leads');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [activeBookingId, setActiveBookingId] = useState<string | null>(null);
@@ -125,6 +126,16 @@ export const AdminLeads: React.FC = () => {
                             }`}
                         >
                             Bookings
+                        </button>
+                        <button
+                            onClick={() => setView('catering')}
+                            className={`px-6 py-2 rounded-2xl text-sm font-semibold transition-all duration-300 ${
+                                view === 'catering' 
+                                ? 'bg-gold-500 text-white shadow-lg shadow-gold-500/40 scale-105' 
+                                : 'bg-gray-100 dark:bg-gray-800/50 text-gray-500 hover:bg-gold-500/10 hover:text-gold-500 hover:shadow-md'
+                            }`}
+                        >
+                            Catering
                         </button>
                         <button
                             onClick={() => setView('support')}
@@ -343,6 +354,12 @@ export const AdminLeads: React.FC = () => {
                 {view === 'assignments' && (
                     <div className="animate-in fade-in duration-700 -mt-12">
                         <AdvisorAssignedConsultations isDark={true} />
+                    </div>
+                )}
+
+                {view === 'catering' && (
+                    <div className="animate-in fade-in duration-700">
+                        <AdminCatering />
                     </div>
                 )}
             </div>

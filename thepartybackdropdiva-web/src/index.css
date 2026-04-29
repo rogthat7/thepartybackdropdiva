@@ -183,3 +183,63 @@ html::-webkit-scrollbar {
     100% { background-position: 200% 0; }
 }
 
+/* Diagonal "SPECIAL" Tag */
+.diagonal-tag {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 30;
+}
+
+.diagonal-tag span {
+    position: absolute;
+    top: 12px;
+    left: -25px;
+    width: 110px;
+    padding: 3px 0;
+    background-color: #d4af37; /* gold-500 */
+    color: white;
+    font-size: 9px;
+    font-weight: 900;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transform: rotate(-45deg);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    display: block;
+}
+
+/* Diagonal "SPECIAL" Tag Right */
+.diagonal-tag-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 30;
+}
+
+.diagonal-tag-right span {
+    position: absolute;
+    top: 12px;
+    right: -25px;
+    width: 110px;
+    padding: 3px 0;
+    background-color: #d4af37; /* gold-500 */
+    color: white;
+    font-size: 9px;
+    font-weight: 900;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transform: rotate(45deg);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    display: block;
+}
+

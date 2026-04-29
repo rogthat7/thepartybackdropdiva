@@ -61,6 +61,7 @@ export interface CateringMenuDto {
     menuItems: MenuItemDto[];
     isCustom?: boolean;
     userId?: string;
+    theme?: string;
 }
 
 export interface BackdropImageDto {
@@ -204,4 +205,44 @@ export const uploadFile = async (file: File) => {
         }
     });
     return res.data.url;
+};
+
+// Admin Catering Items
+export const fetchAdminCateringItems = async () => {
+    const res = await apiClient.get<MenuItemDto[]>('/Admin/catering/items');
+    return res.data;
+};
+
+export const createCateringItem = async (dto: Partial<MenuItemDto>) => {
+    const res = await apiClient.post<MenuItemDto>('/Admin/catering/items', dto);
+    return res.data;
+};
+
+export const updateCateringItem = async (id: string, dto: Partial<MenuItemDto>) => {
+    const res = await apiClient.put<MenuItemDto>(`/Admin/catering/items/${id}`, dto);
+    return res.data;
+};
+
+export const deleteCateringItem = async (id: string) => {
+    await apiClient.delete(`/Admin/catering/items/${id}`);
+};
+
+// Admin Catering Menus
+export const fetchAdminCateringMenus = async () => {
+    const res = await apiClient.get<CateringMenuDto[]>('/Admin/catering/menus');
+    return res.data;
+};
+
+export const createCateringMenu = async (dto: Partial<CateringMenuDto>) => {
+    const res = await apiClient.post<CateringMenuDto>('/Admin/catering/menus', dto);
+    return res.data;
+};
+
+export const updateCateringMenu = async (id: string, dto: Partial<CateringMenuDto>) => {
+    const res = await apiClient.put<CateringMenuDto>(`/Admin/catering/menus/${id}`, dto);
+    return res.data;
+};
+
+export const deleteCateringMenu = async (id: string) => {
+    await apiClient.delete(`/Admin/catering/menus/${id}`);
 };

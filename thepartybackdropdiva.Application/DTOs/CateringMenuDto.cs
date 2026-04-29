@@ -10,4 +10,5 @@ public class CateringMenuDto
     public List<MenuItemDto> MenuItems { get; set; } = new();
     public bool IsCustom { get; set; }
     public Guid? UserId { get; set; }
+    public string? Theme { get; set; }
 }
