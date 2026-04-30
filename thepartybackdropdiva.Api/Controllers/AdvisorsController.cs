@@ -101,11 +101,17 @@ public class AdvisorsController : ControllerBase
             .Select(ac => new ConsultationDto
             {
                 Id = ac.ConsultationRequest.Id,
+                Name = ac.ConsultationRequest.Name,
                 Email = ac.ConsultationRequest.Email,
                 Phone = ac.ConsultationRequest.Phone,
                 Comments = ac.ConsultationRequest.Comments,
                 Status = ac.ConsultationRequest.Status,
                 CreatedAt = ac.ConsultationRequest.CreatedAt,
+                EventType = ac.ConsultationRequest.EventType,
+                EventDate = ac.ConsultationRequest.EventDate,
+                GuestCount = ac.ConsultationRequest.GuestCount,
+                VenueLocation = ac.ConsultationRequest.VenueLocation,
+                ServicesInterested = ac.ConsultationRequest.ServicesInterested,
                 AssignedAdvisorName = $"{ac.Advisor.User.FirstName} {ac.Advisor.User.LastName}"
             })
             .ToListAsync();

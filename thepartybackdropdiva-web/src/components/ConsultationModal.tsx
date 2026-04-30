@@ -51,13 +51,15 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
       const handlePlaceSelect = (e: any) => {
         const place = e.detail.place;
         if (place) {
-          const location = place.formattedAddress || place.displayName || '';
+          const location = place.formattedAddress || place.formatted_address || place.displayName || '';
           setVenueLocation(location);
         }
       };
       // Capture manual typing in the autocomplete field
       const handleInput = (e: any) => {
-        setVenueLocation(e.target ? e.target.value : '');
+        // Try to get value from target, then from internal input if possible
+        const val = e.target?.value || e.detail?.value || '';
+        setVenueLocation(val);
       };
       const element = autocompleteRef.current;
       element.addEventListener('gmp-placeselect', handlePlaceSelect);
@@ -101,6 +103,12 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
     }
     setStatus('loading');
     try {
+      // Final check for venueLocation from autocomplete component if it wasn't captured by events
+      let currentVenue = venueLocation;
+      if (!currentVenue && autocompleteRef.current) {
+        currentVenue = (autocompleteRef.current as any).value || '';
+      }
+
       await submitConsultation({
         name,
         email,
@@ -109,7 +117,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({ isOpen, on
         eventType,
         eventDate,
         guestCount,
-        venueLocation,
+        venueLocation: currentVenue,
         servicesInterested,
       });
       setStatus('success');
