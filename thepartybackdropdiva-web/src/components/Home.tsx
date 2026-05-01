@@ -10,7 +10,10 @@ import { useAuth } from '../context/AuthContext';
 import { UserMenu } from './UserMenu';
 
 export const Home: React.FC = () => {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('theme_dark');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
   const [activeTab, setActiveTab] = useState<'home' | 'gallery' | 'catering' | 'support_requests' | 'assigned_consultations'>('home');
   const location = useLocation();
 
@@ -24,6 +27,10 @@ export const Home: React.FC = () => {
     
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [location.pathname]);
+
+  useEffect(() => {
+    localStorage.setItem('theme_dark', JSON.stringify(isDark));
+  }, [isDark]);
 
 
   const [isConsultationModalOpen, setIsModalOpen] = useState(false);

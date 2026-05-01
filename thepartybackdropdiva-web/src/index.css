@@ -262,17 +262,17 @@ html::-webkit-scrollbar {
 }
 
 .tubelight-text {
-    color: transparent !important;
-    -webkit-text-stroke: 1px white;
     display: inline-block;
+}
+
+/* Dark Theme: White border style */
+.dark .tubelight-text {
+    color: transparent !important;
+    -webkit-text-stroke: 1.5px white;
     animation: tubelight-flicker 4s ease-out forwards;
 }
 
-.dark .tubelight-text {
-    -webkit-text-stroke: 1.5px white;
-}
-
-/* Light Mode support - RGB Gradient Look */
+/* Light Mode support - RGB Gradient Look Only */
 :not(.dark) .tubelight-text {
     -webkit-text-stroke: 0.5px rgba(0,0,0,0.1);
     background: linear-gradient(

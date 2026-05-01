@@ -29,7 +29,7 @@ export const Login: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 dark">
             <div className="absolute inset-0 bg-[url('/images/lux-bg.png')] opacity-10 bg-cover bg-center pointer-events-none"></div>
             
             <div className="relative w-full max-w-md bg-gray-900/50 backdrop-blur-xl border border-gray-800 p-10 rounded-3xl shadow-2xl">
