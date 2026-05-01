@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { type AdminConsultationRequest, getAllConsultations, updateConsultationStatus, deleteConsultationRequest, getAllBookings } from '../services/ConsultationService';
+import { type AdminConsultationRequest, getAllConsultations, updateConsultationStatus, deleteConsultationRequest, getAllBookings, convertConsultationToBooking } from '../services/ConsultationService';
 import { AdminFollowUpForm } from './AdminFollowUpForm';
 import { type AdvisorDto, getAllAdvisors, assignAdvisor } from '../services/AdvisorService';
 import { SupportRequests } from './SupportRequests';
@@ -92,6 +92,20 @@ export const AdminLeads: React.FC = () => {
             toast.success('Advisor assigned successfully.');
         } catch (err) {
             toast.error('Failed to assign advisor.');
+        }
+    };
+
+    const handleConvert = async (id: string) => {
+        if (!window.confirm('Convert this consultation into a confirmed event booking?')) return;
+        try {
+            setLoading(true);
+            await convertConsultationToBooking(id);
+            toast.success('Successfully converted to event booking!');
+            fetchLeads(); // Refresh leads
+        } catch (err: any) {
+            toast.error(err.message || 'Failed to convert consultation.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -237,12 +251,17 @@ export const AdminLeads: React.FC = () => {
                                         <td className="px-6 py-4 border-r border-gray-200 dark:border-gray-700">
                                             <select 
                                                 onChange={(e) => handleAssignAdvisor(lead.id, e.target.value)}
-                                                className="text-[10px] w-full bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded p-1"
-                                                value=""
+                                                className="text-[10px] w-full bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded p-1 mb-2"
+                                                value={lead.assignedAdvisorId || ""}
                                             >
                                                 <option value="">Choose Advisor...</option>
                                                 {advisors.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                                             </select>
+                                            {lead.assignedAdvisorName && (
+                                                <div className="text-[10px] text-gray-500 italic px-1">
+                                                    Currently: <span className="font-semibold text-gold-600">{lead.assignedAdvisorName}</span>
+                                                </div>
+                                            )}
                                         </td>
                                         <td className="px-6 py-4 border-r border-gray-200 dark:border-gray-700">
                                             <div className="relative">
@@ -252,12 +271,14 @@ export const AdminLeads: React.FC = () => {
                                                     className={`text-xs font-bold px-3 py-1.5 rounded-lg border appearance-none cursor-pointer w-full transition-all duration-300 ${lead.status === 'Pending' ? 'bg-amber-100 border-amber-200 text-amber-800' :
                                                             lead.status === 'Contacted' ? 'bg-blue-100 border-blue-200 text-blue-800' :
                                                             lead.status === 'Assigned' ? 'bg-indigo-100 border-indigo-200 text-indigo-800' :
+                                                            lead.status === 'Converted' ? 'bg-purple-100 border-purple-200 text-purple-800' :
                                                                 'bg-green-100 border-green-200 text-green-800'
                                                         }`}
                                                 >
                                                     <option value="Pending">🕒 Pending</option>
                                                     <option value="Assigned">🤝 Assigned</option>
                                                     <option value="Contacted">📞 Contacted</option>
+                                                    <option value="Converted">✨ Converted</option>
                                                     <option value="Completed">✅ Completed</option>
                                                 </select>
                                             </div>
@@ -281,6 +302,17 @@ export const AdminLeads: React.FC = () => {
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                                     </svg>
                                                 </button>
+                                                {lead.status !== 'Converted' && (
+                                                    <button
+                                                        onClick={() => handleConvert(lead.id)}
+                                                        className="p-2 text-gold-500 bg-gold-50 dark:bg-gold-900/20 rounded-xl hover:bg-gold-500 hover:text-white transition-all shadow-sm"
+                                                        title="Convert to Event"
+                                                    >
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                        </svg>
+                                                    </button>
+                                                )}
                                                 <button
                                                     onClick={() => handleDelete(lead.id)}
                                                     className="p-2 text-red-500 bg-red-50 dark:bg-red-900/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white shadow-sm"

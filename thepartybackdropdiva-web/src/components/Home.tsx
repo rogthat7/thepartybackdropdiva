@@ -19,6 +19,7 @@ export const Home: React.FC = () => {
     if (path === '/gallery') setActiveTab('gallery');
     else if (path === '/catering') setActiveTab('catering');
     else if (path === '/support-requests') setActiveTab('support_requests');
+    else if (path === '/assignments') setActiveTab('assigned_consultations');
     else if (path === '/') setActiveTab('home');
     
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -35,7 +36,9 @@ export const Home: React.FC = () => {
       <header className={`relative py-6 border-b shadow-sm sticky top-0 z-50 transition-colors ${isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-100'}`}>
         <div className="max-w-7xl mx-auto px-8 flex justify-between items-center">
           <div className="flex items-center gap-6">
-            <h1 className="text-2xl font-light tracking-widest uppercase">The Party Backdrop <span className="font-semibold text-gold-500">Diva</span></h1>
+            <h1 className="text-2xl font-light tracking-widest uppercase">
+              <span className="tubelight-text">The Party Backdrop</span> <span className="font-semibold text-gold-500">Diva</span>
+            </h1>
           </div>
           <nav className="flex items-center gap-8 text-sm font-medium tracking-wide">
 

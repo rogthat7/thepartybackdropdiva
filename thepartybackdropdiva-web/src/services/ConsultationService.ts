@@ -13,6 +13,8 @@ export interface AdminConsultationRequest {
   guestCount?: string;
   venueLocation?: string;
   servicesInterested?: string;
+  assignedAdvisorId?: string;
+  assignedAdvisorName?: string;
 }
 
 export const getAllConsultations = async (): Promise<AdminConsultationRequest[]> => {
@@ -67,4 +69,20 @@ export const getAllBookings = async (): Promise<any[]> => {
     throw new Error('Failed to fetch bookings');
   }
   return response.json();
+};
+
+export const convertConsultationToBooking = async (consultationId: string): Promise<void> => {
+  const token = localStorage.getItem('auth_token');
+  const response = await fetch(`${API_BASE_URL}/api/admin/consultations/convert`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ consultationId }),
+  });
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Failed to convert consultation to booking');
+  }
 };

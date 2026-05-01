@@ -243,3 +243,31 @@ html::-webkit-scrollbar {
     display: block;
 }
 
+@keyframes tubelight-flicker {
+    0% { opacity: 0.1; text-shadow: 0 0 0px #fff; }
+    2% { opacity: 0.8; text-shadow: 0 0 10px #fff; }
+    4% { opacity: 0.2; text-shadow: 0 0 2px #fff; }
+    6% { opacity: 0.9; text-shadow: 0 0 15px #fff; }
+    8% { opacity: 0.1; text-shadow: 0 0 1px #fff; }
+    10% { opacity: 1; text-shadow: 0 0 10px #fff, 0 0 20px #fff; }
+    12% { opacity: 0.3; text-shadow: 0 0 5px #fff; }
+    14% { opacity: 1; text-shadow: 0 0 10px #fff, 0 0 20px #fff; }
+    16% { opacity: 0.2; text-shadow: 0 0 2px #fff; }
+    18% { opacity: 0.9; text-shadow: 0 0 15px #fff; }
+    25% { opacity: 1; text-shadow: 0 0 15px #fff, 0 0 30px #fff; }
+    100% { 
+        opacity: 1; 
+        text-shadow: 0 0 10px #fff, 0 0 20px rgba(255,255,255,0.5);
+    }
+}
+
+.tubelight-text {
+    color: transparent !important;
+    -webkit-text-stroke: 1px white;
+    display: inline-block;
+    animation: tubelight-flicker 4s ease-out forwards;
+}
+
+.dark .tubelight-text {
+    -webkit-text-stroke: 1.5px white;
+}

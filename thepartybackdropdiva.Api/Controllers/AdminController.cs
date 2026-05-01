@@ -4,6 +4,9 @@ using MediatR;
 using thepartybackdropdiva.Application.Interfaces;
 using thepartybackdropdiva.Domain.Entities;
 using thepartybackdropdiva.Infrastructure.Repositories;
+using thepartybackdropdiva.Infrastructure.Data;
+using thepartybackdropdiva.Application.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace thepartybackdropdiva.Api.Controllers;
 
@@ -16,17 +19,20 @@ public class AdminController : ControllerBase
     private readonly IRepository<ConsultationRequest> _consultationRepository;
     private readonly ICateringService _cateringService;
     private readonly IMediator _mediator;
+    private readonly AppDbContext _context;
 
     public AdminController(
         IRepository<Booking> bookingRepository, 
         IRepository<ConsultationRequest> consultationRepository,
         ICateringService cateringService,
-        IMediator mediator)
+        IMediator mediator,
+        AppDbContext context)
     {
         _bookingRepository = bookingRepository;
         _consultationRepository = consultationRepository;
         _cateringService = cateringService;
         _mediator = mediator;
+        _context = context;
     }
 
     [HttpGet("bookings")]
@@ -39,8 +45,34 @@ public class AdminController : ControllerBase
     [HttpGet("consultations")]
     public async Task<IActionResult> GetConsultationRequests()
     {
-        var requests = await _consultationRepository.GetAllAsync();
-        return Ok(requests.OrderByDescending(r => r.CreatedAt));
+        var requests = await _context.ConsultationRequests
+            .Select(r => new ConsultationDto
+            {
+                Id = r.Id,
+                Name = r.Name,
+                Email = r.Email,
+                Phone = r.Phone,
+                Comments = r.Comments,
+                Status = r.Status,
+                CreatedAt = r.CreatedAt,
+                EventType = r.EventType,
+                EventDate = r.EventDate,
+                GuestCount = r.GuestCount,
+                VenueLocation = r.VenueLocation,
+                ServicesInterested = r.ServicesInterested,
+                AssignedAdvisorId = _context.AdvisorActiveConsultations
+                    .Where(ac => ac.ConsultationRequestId == r.Id)
+                    .Select(ac => (Guid?)ac.AdvisorId)
+                    .FirstOrDefault(),
+                AssignedAdvisorName = _context.AdvisorActiveConsultations
+                    .Where(ac => ac.ConsultationRequestId == r.Id)
+                    .Select(ac => $"{ac.Advisor.User.FirstName} {ac.Advisor.User.LastName}")
+                    .FirstOrDefault()
+            })
+            .OrderByDescending(r => r.CreatedAt)
+            .ToListAsync();
+
+        return Ok(requests);
     }
 
     [HttpPatch("consultations/{id}/status")]
@@ -130,6 +162,44 @@ public class AdminController : ControllerBase
     {
         await _cateringService.DeleteMenuAsync(id);
         return NoContent();
+    }
+
+    [HttpPost("consultations/convert")]
+    public async Task<IActionResult> ConvertConsultationToBooking([FromBody] thepartybackdropdiva.Application.DTOs.ConvertToBookingDto dto)
+    {
+        var consultation = await _consultationRepository.GetByIdAsync(dto.ConsultationId);
+        if (consultation == null) return NotFound("Consultation request not found.");
+
+        if (consultation.Status == "Converted")
+            return BadRequest("This consultation has already been converted to an event.");
+
+        // Create new Booking from Consultation data
+        var booking = new Booking
+        {
+            CustomerName = consultation.Name ?? "Unknown",
+            CustomerEmail = consultation.Email ?? string.Empty,
+            CustomerPhone = consultation.Phone ?? string.Empty,
+            EventDate = dto.OverrideEventDate ?? consultation.EventDate ?? DateTime.UtcNow.AddDays(30),
+            EventLocation = dto.OverrideLocation ?? consultation.VenueLocation ?? "TBD",
+            ExpectedGuestCount = dto.OverrideGuestCount ?? (int.TryParse(consultation.GuestCount, out var gc) ? gc : 0),
+            Status = "Confirmed",
+            CreatedAt = DateTime.UtcNow
+        };
+
+        // Handle Service Items if provided
+        if (dto.SelectedServiceItemIds != null && dto.SelectedServiceItemIds.Any())
+        {
+            // Note: In a real app, you'd fetch these from a repository
+            // For now, we'll assume they are added later or via a separate service call
+        }
+
+        await _bookingRepository.AddAsync(booking);
+
+        // Update Consultation Status
+        consultation.Status = "Converted";
+        await _consultationRepository.UpdateAsync(consultation);
+
+        return Ok(new { Message = "Consultation successfully converted to event.", BookingId = booking.Id });
     }
 }
 

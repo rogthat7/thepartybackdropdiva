@@ -42,7 +42,15 @@ export const AdvisorAssignedConsultations: React.FC<Props> = ({ isDark }) => {
                                 <div className="text-[10px] font-bold text-gold-500 uppercase tracking-widest">{new Date(lead.createdAt).toLocaleDateString()}</div>
                                 <h3 className={`font-semibold mt-1 ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>{lead.email || lead.phone}</h3>
                             </div>
-                            <span className="px-2 py-1 bg-indigo-100 text-indigo-700 text-[10px] font-bold rounded-md uppercase">Assigned</span>
+                            <span className={`px-2 py-1 text-[10px] font-bold rounded-md uppercase ${
+                                lead.status === 'Pending' ? 'bg-amber-100 text-amber-700' :
+                                lead.status === 'Contacted' ? 'bg-blue-100 text-blue-700' :
+                                lead.status === 'Assigned' ? 'bg-indigo-100 text-indigo-700' :
+                                lead.status === 'Converted' ? 'bg-purple-100 text-purple-700' :
+                                'bg-green-100 text-green-700'
+                            }`}>
+                                {lead.status}
+                            </span>
                         </div>
                         <div className={`text-sm italic mb-6 line-clamp-3 p-3 rounded-lg border border-dashed ${isDark ? 'text-gray-400 bg-gray-900/50 border-gray-700' : 'text-gray-500 bg-gray-50 border-gray-200'}`}>
                             "{lead.comments || 'No specific instructions provided.'}"

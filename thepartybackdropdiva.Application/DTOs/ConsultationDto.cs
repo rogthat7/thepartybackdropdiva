@@ -10,6 +10,7 @@ public class ConsultationDto
     public string Status { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public string? AssignedAdvisorName { get; set; }
+    public Guid? AssignedAdvisorId { get; set; }
 
     // Event context fields
     public string? EventType { get; set; }

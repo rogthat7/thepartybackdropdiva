@@ -42,9 +42,20 @@ export const Register: React.FC = () => {
             <div className="absolute inset-0 bg-[url('/images/lux-bg.png')] opacity-10 bg-cover bg-center pointer-events-none"></div>
             
             <div className="relative w-full max-w-lg bg-gray-900/50 backdrop-blur-xl border border-gray-800 p-10 rounded-3xl shadow-2xl">
+                {/* Close Button */}
+                <button 
+                    onClick={() => navigate('/')}
+                    className="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors p-2 hover:bg-white/5 rounded-full"
+                    aria-label="Close"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
                 <div className="text-center mb-8">
                     <Link to="/" className="text-xl font-light tracking-widest uppercase mb-4 block">
-                        The Party Backdrop <span className="font-semibold text-gold-500">Diva</span>
+                        <span className="tubelight-text">The Party Backdrop</span> <span className="font-semibold text-gold-500">Diva</span>
                     </Link>
                     <h2 className="text-3xl font-light text-white">Join the Circle</h2>
                     <p className="text-gray-500 mt-2">Become a member and track your events</p>
