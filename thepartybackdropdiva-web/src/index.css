@@ -271,3 +271,22 @@ html::-webkit-scrollbar {
 .dark .tubelight-text {
     -webkit-text-stroke: 1.5px white;
 }
+
+/* Light Mode support - RGB Gradient Look */
+:not(.dark) .tubelight-text {
+    -webkit-text-stroke: 0.5px rgba(0,0,0,0.1);
+    background: linear-gradient(
+        to right, 
+        #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+    animation: tubelight-flicker 4s ease-out forwards, rgb-text-move 3s linear infinite;
+}
+
+@keyframes rgb-text-move {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
